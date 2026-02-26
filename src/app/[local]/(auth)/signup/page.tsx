@@ -1,59 +1,73 @@
 "use client";
 
+import SubmitButton from "@/components/shared/SubmitButton";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { registerUser } from "@/lib/actions/auth";
+import { Link } from "@/i18n/navigation";
+import { registerUser, signinUser } from "@/lib/actions/auth";
 import { authSchema } from "@/lib/schemes/auth.scheme";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTransition } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import z from "zod";
 
-export default function page() {
-  const [isPending, startTransition] = useTransition();
-
-  //Form
-  const form = useForm<z.infer<typeof authSchema>>({
+export default function Page() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+    setError,
+  } = useForm<z.infer<typeof authSchema>>({
     resolver: zodResolver(authSchema),
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  //Function
-  function onSubmit(data: z.infer<typeof authSchema>) {
-    startTransition(async () => {
-      await registerUser(data);
-    });
-  }
+  const onSubmit = async (data: z.infer<typeof authSchema>) => {
+    const result = await registerUser(data);
+
+    if (result?.error) {
+      setError("root", result.error);
+    }
+  };
+
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Controller
-        name="email"
-        control={form.control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-            <Input {...field} id={field.name} aria-invalid={fieldState.invalid} placeholder="Email" />
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-md space-y-6">
+        <div className="space-y-2 text-center">
+          <h1 className="text-2xl font-semibold">Sign up</h1>
+          <p className="text-sm text-muted-foreground">Enter your credentials to access your account</p>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Email */}
+          <Field data-invalid={!!errors.email}>
+            <FieldLabel htmlFor="email">Email</FieldLabel>
+            <Input id="email" type="email" placeholder="you@example.com" autoFocus {...register("email")} aria-invalid={!!errors.email} />
+            {errors.email && <FieldError errors={[errors.email]} />}
           </Field>
-        )}
-      />
-      <Controller
-        name="password"
-        control={form.control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-            <Input {...field} id={field.name} aria-invalid={fieldState.invalid} type="password" placeholder="Password" />
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+
+          {/* Password */}
+          <Field data-invalid={!!errors.password}>
+            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <Input id="password" type="password" placeholder="••••••••" {...register("password")} aria-invalid={!!errors.password} />
+            {errors.password && <FieldError errors={[errors.password]} />}
           </Field>
-        )}
-      />
-      <button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Signing up..." : "Sign Up"}
-      </button>
-    </form>
+
+          {/* Server error */}
+          {errors.root && <p className="text-sm text-red-500">{errors.root.message}</p>}
+
+          <SubmitButton text={isSubmitting ? "Sign up..." : "Sign up"} disabled={!isValid || isSubmitting} />
+        </form>
+        <p className="text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <Link href="/login" className="text-sm text-muted-foreground">
+            Login
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 }

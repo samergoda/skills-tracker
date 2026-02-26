@@ -4,16 +4,21 @@ import { db } from "@/db/db";
 import { eq } from "drizzle-orm";
 import { users } from "@/db/schema";
 import bcrypt from "bcrypt";
+import "dotenv/config";
 
-const SECRET = "use_an_ENV_VAR";
+const SECRET = process.env.SECRET;
 
-export const createTokenForUser = (userId: string) => {
-  const token = jwt.sign({ id: userId }, SECRET);
+if (!SECRET) {
+  throw new Error("SECRET is not defined in environment variables");
+}
+
+export const createTokenForUser = (userId: string, rule: string) => {
+  const token = jwt.sign({ id: userId, rule }, SECRET);
   return token;
 };
 
-export const getUserFromToken = async (token: { name: string; value: string }) => {
-  const payload = jwt.verify(token.value, SECRET) as { id: string };
+export const getUserFromToken = async (token: string) => {
+  const payload = jwt.verify(token, SECRET) as { id: string };
 
   const user = await db.query.users.findFirst({
     where: eq(users.id, payload.id),
@@ -21,44 +26,11 @@ export const getUserFromToken = async (token: { name: string; value: string }) =
       id: true,
       email: true,
       createdAt: true,
+      rule: true,
     },
   });
 
   return user;
-};
-
-export const signin = async ({ email, password }: { email: string; password: string }) => {
-  const match = await db.query.users.findFirst({
-    where: eq(users.email, email),
-  });
-
-  if (!match) throw new Error("invalid user");
-
-  const correctPW = await comparePW(password, match.password);
-
-  if (!correctPW) {
-    throw new Error("invalid user");
-  }
-
-  const token = createTokenForUser(match.id);
-  const { password: pw, ...user } = match;
-  console.log("user", match);
-  return { user, token };
-};
-
-export const signup = async ({ email, password }: { email: string; password: string }) => {
-  const hashedPW = await hashPW(password);
-  const rows = await db.insert(users).values({ email, password: hashedPW, rule: "user" }).returning({
-    id: users.id,
-    email: users.email,
-    createdAt: users.createdAt,
-    rule: users.rule,
-  });
-
-  const user = rows[0];
-  const token = createTokenForUser(user.id);
-
-  return { user, token };
 };
 
 export const hashPW = (password: string) => {

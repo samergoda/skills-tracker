@@ -3,8 +3,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import "dotenv/config";
-
 const COOKIE_NAME = process.env.COOKIE_NAME;
 
 if (!COOKIE_NAME) {
