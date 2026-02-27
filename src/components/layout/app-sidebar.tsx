@@ -1,4 +1,6 @@
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader } from "@/components/ui/sidebar";
+import { Button } from "../ui/button";
+import LogoutButton from "../features/logout-button";
 
 const RTL_LOCALES = ["ar"];
 
@@ -11,7 +13,10 @@ export function AppSidebar({ locale }: { locale: string }) {
         <SidebarGroup />
         <SidebarGroup />
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter>
+        {/* Logout button */}
+        <LogoutButton />
+      </SidebarFooter>
     </Sidebar>
   );
 }

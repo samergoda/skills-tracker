@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, numeric, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 const id = () =>
   text("id")
@@ -22,4 +22,26 @@ export const users = sqliteTable("users", {
   email: text("email").unique().notNull(),
   password: text("password").notNull(),
   rule: text("rule").notNull(),
+  firstName: text("first-name").notNull(),
+  lastName: text("last-name").notNull(),
+});
+
+export const skills = sqliteTable("skills", {
+  id: id(),
+  createdAt: createdAt(),
+  ownerId: text("owner_id").notNull(),
+  name: text("name").notNull(),
+  category: text("category").notNull(),
+  difficulty: text("difficulty").notNull(),
+  is_public: numeric("is_public").notNull(),
+});
+
+export const stats = sqliteTable("stats", {
+  id: id(),
+  createdAt: createdAt(),
+  ownerId: text("owner_id").notNull(),
+  name: text("name").notNull(),
+  category: text("category").notNull(),
+  difficulty: text("difficulty").notNull(),
+  is_public: boolean("is_public").notNull(),
 });

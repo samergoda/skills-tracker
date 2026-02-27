@@ -1,10 +1,13 @@
 import "server-only";
+
 import jwt from "jsonwebtoken";
 import { db } from "@/db/db";
 import { eq } from "drizzle-orm";
 import { users } from "@/db/schema";
 import bcrypt from "bcrypt";
-import "dotenv/config";
+import { getLocale } from "next-intl/server";
+import { getToken } from "./getToken";
+import { redirect } from "@/i18n/navigation";
 
 const SECRET = process.env.SECRET;
 
@@ -12,12 +15,20 @@ if (!SECRET) {
   throw new Error("SECRET is not defined in environment variables");
 }
 
-export const createTokenForUser = (userId: string, rule: string) => {
-  const token = jwt.sign({ id: userId, rule }, SECRET);
+export const createTokenForUser = (userId: string, rule: string, firstName: string, lastName: string) => {
+  const token = jwt.sign({ id: userId, rule, firstName, lastName }, SECRET);
   return token;
 };
 
-export const getUserFromToken = async (token: string) => {
+export const getUserFromToken = async () => {
+  // Locale
+  const locale = await getLocale();
+
+  // Token
+  const token = await getToken();
+
+  if (!token) return redirect({ href: "/login", locale });
+
   const payload = jwt.verify(token, SECRET) as { id: string };
 
   const user = await db.query.users.findFirst({
@@ -27,8 +38,11 @@ export const getUserFromToken = async (token: string) => {
       email: true,
       createdAt: true,
       rule: true,
+      firstName: true,
+      lastName: true,
     },
   });
+  if (!user?.id) return redirect({ href: "/login", locale });
 
   return user;
 };

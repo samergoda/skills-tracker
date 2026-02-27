@@ -1,11 +1,12 @@
-import { NextIntlClientProvider } from "next-intl";
-
 import { Geist, Geist_Mono } from "next/font/google";
-import { getLocale } from "next-intl/server";
 import RootProviders from "@/components/providers";
+import { Suspense } from "react";
 
 type Props = {
   children: React.ReactNode;
+  params: {
+    locale: string;
+  };
 };
 
 const geistSans = Geist({
@@ -17,13 +18,16 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-export default async function RootLayout({ children }: Props) {
-  const locale = await getLocale();
+export function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "ar" }];
+}
+export default async function RootLayout({ children, params }: Props) {
   return (
-    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
+    <html lang={params.locale} dir={params.locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <RootProviders>{children}</RootProviders>
+        <Suspense fallback={<div>Loading...</div>}>
+          <RootProviders>{children}</RootProviders>
+        </Suspense>
       </body>
     </html>
   );

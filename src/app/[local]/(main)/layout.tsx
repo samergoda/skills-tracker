@@ -1,6 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/ui/app-sidebar";
-import { ReactNode } from "react";
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import { ReactNode, Suspense } from "react";
 import { ThemeSwitcher } from "@/components/features/theme-switcher";
 import { getLocale, getTranslations } from "next-intl/server";
 import LocaleToggle from "@/components/features/lang-toggle";
@@ -37,7 +37,9 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
             <ThemeSwitcher />
 
             {/* Language switcher */}
-            <LocaleToggle />
+            <Suspense fallback={"loading.."}>
+              <LocaleToggle />
+            </Suspense>
           </div>
         </div>
 

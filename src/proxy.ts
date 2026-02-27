@@ -48,8 +48,7 @@ export default async function proxy(request: NextRequest) {
   if (token) {
     try {
       const { payload } = await jwtVerify(token.value, SECRET);
-      console.log("payload", payload);
-      isValidToken = true;
+      isValidToken = payload.id ? true : false;
     } catch (e) {
       // Invalid token → delete the bad cookie and redirect to login
       const response = NextResponse.redirect(new URL(`/${locale}/login`, request.url));

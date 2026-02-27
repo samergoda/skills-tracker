@@ -4,7 +4,7 @@ import SubmitButton from "@/components/shared/SubmitButton";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
-import { registerUser, signinUser } from "@/lib/actions/auth";
+import { registerUser } from "@/lib/actions/auth";
 import { authSchema } from "@/lib/schemes/auth.scheme";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -22,6 +22,8 @@ export default function Page() {
     defaultValues: {
       email: "",
       password: "",
+      firstName: "",
+      lastName: "",
     },
   });
 
@@ -42,6 +44,16 @@ export default function Page() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <Field data-invalid={!!errors.firstName}>
+            <FieldLabel htmlFor="firstName">firstName</FieldLabel>
+            <Input id="first-name" type="text" placeholder="john" autoFocus {...register("firstName")} aria-invalid={!!errors.firstName} />
+            {errors.firstName && <FieldError errors={[errors.firstName]} />}
+          </Field>
+          <Field data-invalid={!!errors.lastName}>
+            <FieldLabel htmlFor="lastName">lastName</FieldLabel>
+            <Input id="last-name" type="text" placeholder="doe" autoFocus {...register("lastName")} aria-invalid={!!errors.lastName} />
+            {errors.lastName && <FieldError errors={[errors.lastName]} />}
+          </Field>
           {/* Email */}
           <Field data-invalid={!!errors.email}>
             <FieldLabel htmlFor="email">Email</FieldLabel>
