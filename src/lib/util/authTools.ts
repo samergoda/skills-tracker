@@ -3,11 +3,12 @@ import "server-only";
 import jwt from "jsonwebtoken";
 import { db } from "@/db/db";
 import { eq } from "drizzle-orm";
-import { users } from "@/db/schema";
+import { sessions, users } from "@/db/schema";
 import bcrypt from "bcrypt";
 import { getLocale } from "next-intl/server";
 import { getToken } from "./getToken";
 import { redirect } from "@/i18n/navigation";
+import { CustomError } from "./customError";
 
 const SECRET = process.env.SECRET;
 
@@ -53,4 +54,45 @@ export const hashPW = (password: string) => {
 
 export const comparePW = (password: string, hashedPW: string) => {
   return bcrypt.compare(password, hashedPW);
+};
+
+export const getSession = async () => {
+  const locale = await getLocale();
+  const token = await getToken();
+
+  if (!token) {
+    return redirect({ href: "/login", locale });
+  }
+
+  let payload: { id: string };
+
+  try {
+    payload = jwt.verify(token, SECRET) as {
+      id: string;
+    };
+  } catch {
+    return redirect({ href: "/login", locale });
+  }
+
+  const session = await db.query.sessions.findFirst({
+    where: eq(sessions.userId, payload.id),
+  });
+
+  if (!session || new Date(session.expiresAt) < new Date()) {
+    return redirect({ href: "/login", locale });
+  }
+
+  return session;
+};
+
+export const createSession = async () => {
+  const user = await getUserFromToken();
+
+  const session = await db.insert(sessions).values({
+    id: crypto.randomUUID(),
+    userId: user.id,
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString(),
+  });
+
+  return session;
 };

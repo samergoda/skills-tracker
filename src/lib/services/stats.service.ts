@@ -16,7 +16,6 @@ export const statsRepository = {
 
   async create(data: Pick<Stats, "skillId" | "hours" | "note" | "completionPercent">) {
     const user = await getUserFromToken();
-    console.log("create progressssss", data);
 
     const id = crypto.randomUUID();
 

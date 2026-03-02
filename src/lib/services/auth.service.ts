@@ -3,7 +3,7 @@ import "server-only";
 import { db } from "@/db/db";
 import { comparePW, createTokenForUser, hashPW } from "../util/authTools";
 import { eq } from "drizzle-orm";
-import { users } from "@/db/schema";
+import { sessions, users } from "@/db/schema";
 import { CustomError } from "../util/customError";
 
 export const login = async ({
@@ -46,6 +46,7 @@ export const signup = async ({
   lastName: string;
 }) => {
   const hashedPW = await hashPW(password);
+
   const rows = await db.insert(users).values({ email, password: hashedPW, rule: "user", firstName, lastName }).returning({
     id: users.id,
     email: users.email,
@@ -57,6 +58,12 @@ export const signup = async ({
 
   const user = rows[0];
   const token = createTokenForUser(user.id, user.rule, user.firstName, user.lastName);
+
+  await db.insert(sessions).values({
+    id: crypto.randomUUID(),
+    userId: user.id,
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString(),
+  });
 
   return { user, token };
 };

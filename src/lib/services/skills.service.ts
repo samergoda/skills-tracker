@@ -3,13 +3,16 @@ import "server-only";
 import { skills } from "@/db/schema";
 import { db } from "@/db/db";
 import { eq } from "drizzle-orm";
-import { getUserFromToken } from "../util/authTools";
+import { getSession, getUserFromToken } from "../util/authTools";
 import { findAllSkills, findSkillsByUserId } from "../util/skillsTools";
 import { revalidateTag } from "next/cache";
 
 export const skillRepository = {
   async findByUser() {
     const user = await getUserFromToken();
+
+    const session = await getSession();
+    console.log("session", session);
 
     // Get all data if admin
     if (user.rule === "admin") {
@@ -19,7 +22,6 @@ export const skillRepository = {
 
     // Get only user's data if
     const result = await findSkillsByUserId(user.id);
-
     return result;
   },
 

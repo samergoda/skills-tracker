@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { loginSchema, signupSchema } from "../schemes/auth.scheme";
 import { login, signup } from "../services/auth.service";
 import { CustomError } from "../util/customError";
+import { createSession } from "../util/authTools";
 
 const COOKIE_NAME = process.env.COOKIE_NAME;
 
@@ -17,12 +18,21 @@ export const registerUser = async (input: z.infer<typeof signupSchema>) => {
 
   try {
     const { token } = await signup(data);
-    (await cookies()).set(COOKIE_NAME, token);
-  } catch (e) {
-    console.error(e);
-    return { error: e || "Feiled to sign in" };
+    (await cookies()).set(COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+    });
+    await createSession();
+    return { success: true };
+  } catch (err) {
+    if (err instanceof CustomError) {
+      return { success: false, error: "Invalid email or password" };
+    }
+
+    return { success: false, error: "Unexpected error" };
   }
-  redirect("/dashboard");
 };
 
 export const signinUser = async (input: z.infer<typeof loginSchema>) => {
@@ -41,6 +51,7 @@ export const signinUser = async (input: z.infer<typeof loginSchema>) => {
       sameSite: "lax",
       path: "/",
     });
+    await createSession();
 
     return { success: true };
   } catch (err) {
@@ -51,4 +62,3 @@ export const signinUser = async (input: z.infer<typeof loginSchema>) => {
     return { success: false, error: "Unexpected error" };
   }
 };
-// : Promise<{ success: true } | { success: false; error: string }>
