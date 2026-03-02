@@ -15,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createSkill } from "@/lib/actions/skills.action";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 
 export default function AddSkill() {
   // const [isOpen, setIsOpen] = useState(false);

@@ -1,6 +1,59 @@
-import { useTranslations } from "next-intl";
+import { getStats } from "@/lib/actions/stats.action";
+import { getTranslations } from "next-intl/server";
+import AddProgress from "./_components/AddProgress";
+import { findByUser } from "@/lib/actions/skills.action";
 
-export default function page() {
-  const t = useTranslations("HomePage");
-  return <h1>{t("title")} stats</h1>;
+export default async function Page() {
+  const data = await getStats();
+  const t = await getTranslations("HomePage");
+  const skills = await findByUser();
+
+  return (
+    <main className="min-h-screen bg-neutral-950 text-white p-6 space-y-10">
+      {/* Page Header */}
+      <header>
+        <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
+        <p className="text-sm text-neutral-400 mt-2">Track your skill progress and recent activity</p>
+      </header>
+
+      {/* Main Content */}
+      <section className="grid gap-10 lg:grid-cols-1">
+        {/* Activity Timeline */}
+        <aside className="space-y-6">
+          <div className="">
+            <h2 className="text-lg font-medium">Recent Activity</h2>
+            <AddProgress skills={skills} />
+          </div>
+
+          <div className="space-y-4 grid gap-10 lg:grid-cols-1">
+            {data.map((log: any) => (
+              <div key={log.id} className="bg-neutral-900 border border-neutral-800 rounded-xl p-4">
+                <div className="text-sm text-neutral-400">
+                  {new Intl.DateTimeFormat("en-US", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  }).format(new Date(log.createdAt))}
+                </div>
+
+                <div className="mt-2 text-sm">
+                  <span className="font-medium">{log.hours}h</span> — {log.note}
+                </div>
+
+                <div className="mt-2 text-xs text-neutral-500">Completion: {log.completionPercent}%</div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      </section>
+    </main>
+  );
+}
+
+function StatCard({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
+      <div className="text-sm text-neutral-400">{label}</div>
+      <div className="mt-2 text-2xl font-semibold">{value}</div>
+    </div>
+  );
 }

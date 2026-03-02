@@ -1,23 +1,29 @@
 "use server";
 
-import { revalidateTag, updateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { skillRepository } from "../services/skills.service";
 
-export async function createSkill(data: { name: string; category: string; difficulty: string }) {
+export async function createSkill(data: Skill) {
   revalidateTag("skills", "max");
-  updateTag("skills-user");
   await skillRepository.create(data);
   return { success: true };
 }
 
-export async function updateSkill(id: string, data: { name: string; category: string; difficulty: string }) {
+export async function updateSkill(id: string, data: Skill) {
   revalidateTag("skills", "max");
-  updateTag("skills-user");
 
   await skillRepository.update(id, data);
   return { success: true };
 }
 
 export async function findByUser() {
-  return await skillRepository.findByUser();
+  const skills: Skill[] = await skillRepository.findByUser();
+  return skills;
+}
+
+export async function deleteSkill(id: string) {
+  revalidateTag("skills", "max");
+
+  await skillRepository.delete(id);
+  return { success: true };
 }

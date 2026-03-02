@@ -18,9 +18,12 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+// Generate static params for locales for build time
 export function generateStaticParams() {
   return [{ locale: "en" }, { locale: "ar" }];
 }
+
 export default async function RootLayout({ children, params }: Props) {
   return (
     <html lang={params.locale} dir={params.locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>

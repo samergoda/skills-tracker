@@ -43,7 +43,7 @@ export default async function SkillsList({ skills }: { skills: Skill[] }) {
       </div>
 
       {/* Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-1">
         {skills.map((skill) => {
           return (
             <div
@@ -80,7 +80,7 @@ export default async function SkillsList({ skills }: { skills: Skill[] }) {
               </div>
 
               {/* Actions */}
-              <ActionsSkillsList />
+              <ActionsSkillsList skill={skill} />
             </div>
           );
         })}

@@ -1,9 +1,10 @@
 import React from "react";
-import { ThemeProvider } from "@/components/providers/components/theme.provider";
+import { ThemeProvider } from "@/components/providers/_components/theme.provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { NextIntlClientProvider, useMessages, useNow, useTimeZone } from "next-intl";
 import { getLocale } from "next-intl/server";
-import ReactQueryProvider from "./components/react-query.provider";
+import ReactQueryProvider from "./_components/react-query.provider";
+import { Toaster } from "@/components/ui/sonner";
 
 export default async function RootProviders({ children }: { children: React.ReactNode }) {
   //Translation
@@ -13,7 +14,13 @@ export default async function RootProviders({ children }: { children: React.Reac
     <NextIntlClientProvider locale={locale}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
         <TooltipProvider>
-          <ReactQueryProvider>{children}</ReactQueryProvider>
+          <ReactQueryProvider>
+            {/* Toaster */}
+            <Toaster />
+
+            {/* Children */}
+            {children}
+          </ReactQueryProvider>
         </TooltipProvider>
       </ThemeProvider>
     </NextIntlClientProvider>

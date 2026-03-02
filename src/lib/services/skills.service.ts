@@ -4,9 +4,6 @@ import { skills } from "@/db/schema";
 import { db } from "@/db/db";
 import { eq } from "drizzle-orm";
 import { getUserFromToken } from "../util/authTools";
-import { redirect } from "@/i18n/navigation";
-import { getLocale } from "next-intl/server";
-import { getToken } from "../util/getToken";
 import { findAllSkills, findSkillsByUserId } from "../util/skillsTools";
 import { revalidateTag } from "next/cache";
 
@@ -56,6 +53,16 @@ export const skillRepository = {
       .where(eq(skills.id, id));
 
     // Revalidate caches after successful update
+    revalidateTag(`skills-user-${user.id}`, "max");
+    revalidateTag("skills-all", "max");
+  },
+
+  async delete(id: string) {
+    const user = await getUserFromToken();
+
+    await db.delete(skills).where(eq(skills.id, id));
+
+    // Revalidate caches after successful delete
     revalidateTag(`skills-user-${user.id}`, "max");
     revalidateTag("skills-all", "max");
   },

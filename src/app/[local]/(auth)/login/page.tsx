@@ -5,19 +5,23 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
 import { signinUser } from "@/lib/actions/auth";
-import { authSchema } from "@/lib/schemes/auth.scheme";
+import { loginSchema } from "@/lib/schemes/auth.scheme";
+import { CustomError } from "@/lib/util/customError";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
 export default function Page() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
     setError,
-  } = useForm<z.infer<typeof authSchema>>({
-    resolver: zodResolver(authSchema),
+    reset,
+  } = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     mode: "onChange",
     defaultValues: {
       email: "",
@@ -25,12 +29,15 @@ export default function Page() {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof authSchema>) => {
+  const onSubmit = async (data: z.infer<typeof loginSchema>) => {
     const result = await signinUser(data);
-
-    if (result?.error) {
-      setError("root", result.error);
+    console.log("result loginnnnnnnn", result);
+    if (!result.success) {
+      setError("root", { message: result.error });
+      return;
     }
+    reset();
+    router.push("/dashboard");
   };
 
   return (

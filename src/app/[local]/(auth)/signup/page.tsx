@@ -5,7 +5,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
 import { registerUser } from "@/lib/actions/auth";
-import { authSchema } from "@/lib/schemes/auth.scheme";
+import { signupSchema } from "@/lib/schemes/auth.scheme";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -16,8 +16,8 @@ export default function Page() {
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
     setError,
-  } = useForm<z.infer<typeof authSchema>>({
-    resolver: zodResolver(authSchema),
+  } = useForm<z.infer<typeof signupSchema>>({
+    resolver: zodResolver(signupSchema),
     mode: "onChange",
     defaultValues: {
       email: "",
@@ -27,7 +27,7 @@ export default function Page() {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof authSchema>) => {
+  const onSubmit = async (data: z.infer<typeof signupSchema>) => {
     const result = await registerUser(data);
 
     if (result?.error) {

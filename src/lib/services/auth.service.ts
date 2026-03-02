@@ -4,22 +4,33 @@ import { db } from "@/db/db";
 import { comparePW, createTokenForUser, hashPW } from "../util/authTools";
 import { eq } from "drizzle-orm";
 import { users } from "@/db/schema";
+import { CustomError } from "../util/customError";
 
-export const signin = async ({ email, password }: { email: string; password: string }) => {
+export const login = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}): Promise<{ user: Omit<User, "password">; token: string }> => {
   const match = await db.query.users.findFirst({
     where: eq(users.email, email),
   });
 
-  if (!match) throw new Error("invalid user");
+  if (!match) {
+    throw new CustomError("INVALID_CREDENTIALS");
+  }
 
   const correctPW = await comparePW(password, match.password);
 
   if (!correctPW) {
-    throw new Error("invalid user");
+    throw new CustomError("INVALID_CREDENTIALS");
   }
 
   const token = createTokenForUser(match.id, match.rule, match.firstName, match.lastName);
-  const { password: pw, ...user } = match;
+
+  const { password: _, ...user } = match;
+
   return { user, token };
 };
 

@@ -1,0 +1,20 @@
+type LoginType = {
+  email: string;
+  password: string;
+};
+
+type SignupType = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+};
+
+type User = {
+  id: string;
+  email: string;
+  createdAt: string;
+  rule: string;
+  firstName: string;
+  lastName: string;
+};

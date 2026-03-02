@@ -8,7 +8,6 @@ export default async function page() {
 
   // Get skills based on rule
   const skills = await findByUser();
-  console.log("skills", skills);
   return (
     <>
       <h1>{t("title")} skills</h1>
