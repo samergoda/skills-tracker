@@ -9,3 +9,7 @@ export async function getStats() {
 export async function createState(data: Pick<Stats, "skillId" | "hours" | "note" | "completionPercent">) {
   return await statsRepository.create(data);
 }
+
+export async function deleteState(id: string) {
+  return await statsRepository.delete(id);
+}

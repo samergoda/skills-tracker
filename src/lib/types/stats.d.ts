@@ -6,5 +6,4 @@ type Stats = {
   note: string;
   completionPercent: number;
   createdAt: string;
-  updatedAt: string;
 };

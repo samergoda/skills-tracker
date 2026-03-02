@@ -44,5 +44,4 @@ export const progressEntries = sqliteTable("progress_entries", {
   hours: real("hours").notNull(),
   note: text("note").notNull(),
   completionPercent: real("completion_percent").notNull(),
-  updatedAt: text("updated_at").notNull(),
 });

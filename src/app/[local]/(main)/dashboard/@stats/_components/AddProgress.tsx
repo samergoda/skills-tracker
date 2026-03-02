@@ -4,34 +4,29 @@ import { Button } from "@/components/ui/button";
 import { createState } from "@/lib/actions/stats.action";
 import { useForm } from "react-hook-form";
 
-type AddProgressForm = {
-  skillId: string;
-  note: string;
-  progress: number;
-};
-
 export default function AddProgress({ skills }: { skills: Skill[] }) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<AddProgressForm>({
+  } = useForm<Pick<Stats, "skillId" | "hours" | "note" | "completionPercent">>({
     defaultValues: {
       skillId: "",
       note: "",
-      progress: 0,
+      hours: 0,
+      completionPercent: 0,
     },
   });
 
-  const onSubmit = async (data: AddProgressForm) => {
-    if (data.progress < 0 || data.progress > 100) return;
+  const onSubmit = async (data: Pick<Stats, "skillId" | "hours" | "note" | "completionPercent">) => {
+    if (data.hours < 0 || data.completionPercent > 100) return;
 
     await createState({
       skillId: data.skillId,
-      hours: data.progress,
+      hours: data.hours,
       note: data.note,
-      completionPercent: data.progress,
+      completionPercent: data.completionPercent,
     });
 
     reset();
@@ -56,7 +51,7 @@ export default function AddProgress({ skills }: { skills: Skill[] }) {
           type="number"
           min={0}
           max={100}
-          {...register("progress", {
+          {...register("completionPercent", {
             required: "Progress is required",
             valueAsNumber: true,
             min: { value: 0, message: "Min is 0" },
@@ -65,7 +60,22 @@ export default function AddProgress({ skills }: { skills: Skill[] }) {
           className="border p-2"
           placeholder="Progress (0-100)"
         />
-        {errors.progress && <p>{errors.progress.message}</p>}
+        {errors.completionPercent && <p>{errors.completionPercent.message}</p>}
+
+        <input
+          type="number"
+          min={0}
+          max={24}
+          {...register("hours", {
+            required: "Hours is required",
+            valueAsNumber: true,
+            min: { value: 0, message: "Min is 0" },
+            max: { value: 24, message: "Max is 24" },
+          })}
+          className="border p-2"
+          placeholder="Hours (0-24)"
+        />
+        {errors.hours && <p>{errors.hours.message}</p>}
 
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Adding..." : "Add Progress"}

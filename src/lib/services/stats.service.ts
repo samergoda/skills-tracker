@@ -27,10 +27,15 @@ export const statsRepository = {
       hours: data.hours,
       note: data.note,
       completionPercent: data.completionPercent,
-      updatedAt: new Date().toISOString(),
     });
 
     // Revalidate after success
+    revalidateTag(`stats-user-${user.id}`, "max");
+  },
+
+  async delete(id: string) {
+    const user = await getUserFromToken();
+    await db.delete(progressEntries).where(eq(progressEntries.id, id));
     revalidateTag(`stats-user-${user.id}`, "max");
   },
 };

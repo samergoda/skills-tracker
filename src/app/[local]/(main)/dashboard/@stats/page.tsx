@@ -2,6 +2,7 @@ import { getStats } from "@/lib/actions/stats.action";
 import { getTranslations } from "next-intl/server";
 import AddProgress from "./_components/AddProgress";
 import { findByUser } from "@/lib/actions/skills.action";
+import StatsCard from "./_components/StatsCard";
 
 export default async function Page() {
   const data = await getStats();
@@ -26,21 +27,8 @@ export default async function Page() {
           </div>
 
           <div className="space-y-4 grid gap-10 lg:grid-cols-1">
-            {data.map((log: any) => (
-              <div key={log.id} className="bg-neutral-900 border border-neutral-800 rounded-xl p-4">
-                <div className="text-sm text-neutral-400">
-                  {new Intl.DateTimeFormat("en-US", {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  }).format(new Date(log.createdAt))}
-                </div>
-
-                <div className="mt-2 text-sm">
-                  <span className="font-medium">{log.hours}h</span> — {log.note}
-                </div>
-
-                <div className="mt-2 text-xs text-neutral-500">Completion: {log.completionPercent}%</div>
-              </div>
+            {data.map((log: Stats) => (
+              <StatsCard key={log.id} log={log} />
             ))}
           </div>
         </aside>
