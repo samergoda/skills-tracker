@@ -25,7 +25,7 @@ export const skillRepository = {
     return result;
   },
 
-  async create(data: { name: string; category: string; difficulty: string }) {
+  async create(data: Pick<Skill, "name" | "category" | "difficulty">) {
     const user = await getUserFromToken();
 
     const skillId = crypto.randomUUID();
@@ -42,7 +42,7 @@ export const skillRepository = {
     revalidateTag(`skills-user-${user.id}`, "max");
   },
 
-  async update(id: string, data: { name: string; category: string; difficulty: string }) {
+  async update(id: string, data: Pick<Skill, "name" | "category" | "difficulty">) {
     const user = await getUserFromToken();
 
     await db

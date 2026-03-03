@@ -3,13 +3,13 @@
 import { revalidateTag } from "next/cache";
 import { skillRepository } from "../services/skills.service";
 
-export async function createSkill(data: Skill) {
+export async function createSkill(data: Pick<Skill, "name" | "category" | "difficulty">) {
   revalidateTag("skills", "max");
   await skillRepository.create(data);
   return { success: true };
 }
 
-export async function updateSkill(id: string, data: Skill) {
+export async function updateSkill(id: string, data: Pick<Skill, "name" | "category" | "difficulty">) {
   revalidateTag("skills", "max");
 
   await skillRepository.update(id, data);
