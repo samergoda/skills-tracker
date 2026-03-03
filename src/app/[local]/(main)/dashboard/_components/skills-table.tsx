@@ -1,0 +1,88 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Pencil, Trash, Plus } from "lucide-react";
+import { SkillFormDialog } from "./skill-form-dialog";
+import { PaginationIconsOnly } from "@/components/features/pagination";
+
+export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) {
+  const [skills, setSkills] = useState(initialSkills);
+  const [selected, setSelected] = useState<AddedSkill | null>(null);
+  const [open, setOpen] = useState(false);
+
+  // Sync state when the server re-fetches data on page change
+  useEffect(() => {
+    setSkills(initialSkills);
+  }, [initialSkills]);
+
+  const handleDelete = async (id: string) => {
+    // TODO: call delete API
+    setSkills((prev) => prev.filter((s) => s.id !== id));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <Button
+          onClick={() => {
+            setSelected(null);
+            setOpen(true);
+          }}>
+          <Plus className="w-4 h-4 mr-2" />
+          Add Skill
+        </Button>
+      </div>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Logo</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Created</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {skills.map((skill) => (
+            <TableRow key={skill.id}>
+              <TableCell>
+                <Image src={skill.logo} alt={skill.skill} width={40} height={40} className="rounded-md" />
+              </TableCell>
+
+              <TableCell className="font-medium">{skill.skill}</TableCell>
+
+              <TableCell>{skill.category}</TableCell>
+
+              <TableCell>{new Date(skill.createdAt).toLocaleDateString()}</TableCell>
+
+              <TableCell className="text-right space-x-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => {
+                    setSelected(skill);
+                    setOpen(true);
+                  }}>
+                  <Pencil className="w-4 h-4" />
+                </Button>
+
+                <Button variant="destructive" size="icon" onClick={() => handleDelete(skill.id)}>
+                  <Trash className="w-4 h-4" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <PaginationIconsOnly />
+
+      <SkillFormDialog open={open} onOpenChange={setOpen} skill={selected} />
+    </div>
+  );
+}

@@ -27,7 +27,6 @@ export default async function SkillsList({ skills }: { skills: Skill[] }) {
     if (user) skillsUserMap.set(user.id, { firstName: user.firstName, lastName: user.lastName });
   });
 
-  console.log("skillUsers", skillUsers);
   if (!skills.length) return <EmptySkillsList />;
 
   return (
