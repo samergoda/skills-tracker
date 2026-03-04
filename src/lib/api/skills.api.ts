@@ -1,18 +1,25 @@
 import { CustomError } from "../util/customError";
+import { SkillsSchema } from "../schemes/skills.schema";
 
 export async function getSkills(params: SkillsQuery) {
-  console.log("get skill dataaa", params);
   const res = await fetch(
-    `https://699d73b883e60a406a4657b7.mockapi.io/skill?limit=15&page=${params.page || 1}&search=${params.search || ""}&order=${params.order || "desc"}`,
+    `https://${process.env.MOCKAPI_SECRET_KEY}.mockapi.io/skill?limit=15&page=${params.page || 1}&search=${params.search || ""}`,
   );
 
   if (!res.ok) {
     new CustomError("Failed to fetch skills");
   }
 
-  const data: AddedSkill[] = await res.json();
+  let json: AddedSkill[] = await res.json();
 
-  console.log("get skill dataaa", data);
+  // Handle case when json get string
+  if (typeof json === "string") {
+    json = [];
+  }
+
+  // Validate response at runtime
+  const data = SkillsSchema.parse(json);
+
   return data;
 }
 

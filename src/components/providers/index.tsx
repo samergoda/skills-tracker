@@ -5,7 +5,6 @@ import { NextIntlClientProvider, useMessages, useNow, useTimeZone } from "next-i
 import { getLocale } from "next-intl/server";
 import ReactQueryProvider from "./_components/react-query.provider";
 import { Toaster } from "@/components/ui/sonner";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export default async function RootProviders({ children }: { children: React.ReactNode }) {
   //Translation
@@ -19,11 +18,8 @@ export default async function RootProviders({ children }: { children: React.Reac
             {/* Toaster */}
             <Toaster />
 
-            {/* Nuqs */}
-            <NuqsAdapter>
-              {/* Children */}
-              {children}
-            </NuqsAdapter>
+            {/* Children */}
+            {children}
           </ReactQueryProvider>
         </TooltipProvider>
       </ThemeProvider>

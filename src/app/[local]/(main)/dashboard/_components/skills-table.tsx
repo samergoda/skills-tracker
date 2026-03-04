@@ -7,19 +7,36 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Trash, Plus } from "lucide-react";
 import { SkillFormDialog } from "./skill-form-dialog";
 import { PaginationIconsOnly } from "@/components/features/pagination";
+import { Input } from "@/components/ui/input";
+import { useDebounce } from "@uidotdev/usehooks";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) {
   const [skills, setSkills] = useState(initialSkills);
   const [selected, setSelected] = useState<AddedSkill | null>(null);
   const [open, setOpen] = useState(false);
-
+  const [search, setSearch] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const debouncedSearch = useDebounce(search, 500);
   // Sync state when the server re-fetches data on page change
   useEffect(() => {
     setSkills(initialSkills);
   }, [initialSkills]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (debouncedSearch) {
+      params.set("search", search);
+    } else {
+      params.delete("search");
+    }
+
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [debouncedSearch]);
+
   const handleDelete = async (id: string) => {
-    // TODO: call delete API
     setSkills((prev) => prev.filter((s) => s.id !== id));
   };
 
@@ -35,7 +52,7 @@ export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) 
           Add Skill
         </Button>
       </div>
-
+      <Input placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
       <Table>
         <TableHeader>
           <TableRow>
@@ -48,6 +65,14 @@ export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) 
         </TableHeader>
 
         <TableBody>
+          {skills.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center">
+                No skills found
+              </TableCell>
+            </TableRow>
+          )}
+
           {skills.map((skill) => (
             <TableRow key={skill.id}>
               <TableCell>

@@ -14,7 +14,7 @@ export default async function SkillsPage({ searchParams }: { searchParams: Promi
 
   const skills = await getSkills(params);
   // const t = await getTranslations("SkillsPage");
-
+  console.log("skills skillss", skills);
   return (
     <div className="container mx-auto py-10 space-y-6">
       <div className="flex items-center justify-between">
