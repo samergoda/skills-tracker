@@ -3,16 +3,13 @@ import "server-only";
 import { skills } from "@/db/schema";
 import { db } from "@/db/db";
 import { eq } from "drizzle-orm";
-import { getSession, getUserFromToken } from "../util/authTools";
+import { getUserFromToken } from "../util/authTools";
 import { findAllSkills, findSkillsByUserId } from "../util/skillsTools";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export const skillRepository = {
   async findByUser() {
     const user = await getUserFromToken();
-
-    const session = await getSession();
-    console.log("session", session);
 
     // Get all data if admin
     if (user.rule === "admin") {
@@ -20,7 +17,7 @@ export const skillRepository = {
       return result;
     }
 
-    // Get only user's data if
+    // Get only user's data
     const result = await findSkillsByUserId(user.id);
     return result;
   },
@@ -38,13 +35,11 @@ export const skillRepository = {
       is_public: "1",
     });
 
-    // Revalidate with correct single-argument syntax
-    revalidateTag(`skills-user-${user.id}`, "max");
+
+
   },
 
   async update(id: string, data: Pick<Skill, "name" | "category" | "difficulty">) {
-    const user = await getUserFromToken();
-
     await db
       .update(skills)
       .set({
@@ -53,19 +48,9 @@ export const skillRepository = {
         difficulty: data.difficulty,
       })
       .where(eq(skills.id, id));
-
-    // Revalidate caches after successful update
-    revalidateTag(`skills-user-${user.id}`, "max");
-    revalidateTag("skills-all", "max");
   },
 
   async delete(id: string) {
-    const user = await getUserFromToken();
-
     await db.delete(skills).where(eq(skills.id, id));
-
-    // Revalidate caches after successful delete
-    revalidateTag(`skills-user-${user.id}`, "max");
-    revalidateTag("skills-all", "max");
   },
 };

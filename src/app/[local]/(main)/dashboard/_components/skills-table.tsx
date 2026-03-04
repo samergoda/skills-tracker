@@ -10,6 +10,7 @@ import { PaginationIconsOnly } from "@/components/features/pagination";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useRouter, useSearchParams } from "next/navigation";
+import { deleteGlobalSkill } from "@/lib/api/skills.api";
 
 export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) {
   const [skills, setSkills] = useState(initialSkills);
@@ -37,7 +38,7 @@ export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) 
   }, [debouncedSearch]);
 
   const handleDelete = async (id: string) => {
-    setSkills((prev) => prev.filter((s) => s.id !== id));
+    await deleteGlobalSkill(id);
   };
 
   return (
@@ -76,7 +77,7 @@ export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) 
           {skills.map((skill) => (
             <TableRow key={skill.id}>
               <TableCell>
-                <Image src={skill.logo} alt={skill.skill} width={40} height={40} className="rounded-md" />
+                <Image src={skill.logo || 'https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/2.jpg'} alt={skill.skill} width={40} height={40} className="rounded-md" />
               </TableCell>
 
               <TableCell className="font-medium">{skill.skill}</TableCell>

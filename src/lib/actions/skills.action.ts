@@ -1,29 +1,38 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { skillRepository } from "../services/skills.service";
+import { SkillsSchema } from "../schemes/skills.schema";
+import { getUserFromToken } from "../util/authTools";
 
 export async function createSkill(data: Pick<Skill, "name" | "category" | "difficulty">) {
-  revalidateTag("skills", "max");
+  await getUserFromToken();
+
   await skillRepository.create(data);
+
+  revalidatePath('/dashboard')
+
   return { success: true };
 }
 
 export async function updateSkill(id: string, data: Pick<Skill, "name" | "category" | "difficulty">) {
-  revalidateTag("skills", "max");
-
   await skillRepository.update(id, data);
+  revalidatePath('/dashboard')
   return { success: true };
 }
 
 export async function findByUser() {
   const skills: Skill[] = await skillRepository.findByUser();
-  return skills;
+
+  const data = SkillsSchema.parse(skills);
+
+  return data;
 }
 
 export async function deleteSkill(id: string) {
-  revalidateTag("skills", "max");
-
   await skillRepository.delete(id);
+  // Revalidate caches after successful delete
+  revalidatePath('/dashboard')
+
   return { success: true };
 }

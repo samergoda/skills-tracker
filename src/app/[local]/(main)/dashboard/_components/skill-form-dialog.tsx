@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { createGlobalSkill } from "@/lib/api/skills.api";
 
 type Skill = {
   id: string;
@@ -32,6 +34,7 @@ export function SkillFormDialog({ open, onOpenChange, skill }: { open: boolean; 
       // update API
     } else {
       // create API
+      createGlobalSkill(form)
     }
 
     onOpenChange(false);
@@ -45,10 +48,13 @@ export function SkillFormDialog({ open, onOpenChange, skill }: { open: boolean; 
         </DialogHeader>
 
         <div className="space-y-4">
+          <Label htmlFor="skill">Skill name</Label>
           <Input placeholder="Skill name" value={form.skill} onChange={(e) => setForm({ ...form, skill: e.target.value })} />
 
+          <Label htmlFor="logo">Logo URL</Label>
           <Input placeholder="Logo URL" value={form.logo} onChange={(e) => setForm({ ...form, logo: e.target.value })} />
 
+          <Label htmlFor="category">Category</Label>
           <Input placeholder="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
 
           <Button className="w-full" onClick={handleSubmit}>

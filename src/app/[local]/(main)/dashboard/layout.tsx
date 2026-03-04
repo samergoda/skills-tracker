@@ -1,13 +1,13 @@
-import React, { Suspense } from "react";
+import { ReactNode, Suspense } from "react";
 
 export default function Layout({
   children,
   skills,
   stats,
 }: {
-  children: React.ReactNode;
-  skills: React.ReactNode;
-  stats: React.ReactNode;
+  children: ReactNode;
+  skills: ReactNode;
+  stats: ReactNode;
 }) {
   return (
     <main className="min-h-screen bg-neutral-950 text-white">

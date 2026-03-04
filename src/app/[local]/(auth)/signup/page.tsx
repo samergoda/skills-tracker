@@ -7,11 +7,13 @@ import { Link } from "@/i18n/navigation";
 import { registerUser } from "@/lib/actions/auth";
 import { signupSchema } from "@/lib/schemes/auth.scheme";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
 export default function Page() {
   const {
+    reset,
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
@@ -27,12 +29,16 @@ export default function Page() {
     },
   });
 
+  const router = useRouter()
   const onSubmit = async (data: z.infer<typeof signupSchema>) => {
     const result = await registerUser(data);
 
-    if (result?.error) {
-      setError("root", result.error);
+    if (!result.success) {
+      setError("root", { message: result.error });
+      return;
     }
+    reset();
+    router.push("/dashboard");
   };
 
   return (
@@ -45,12 +51,12 @@ export default function Page() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Field data-invalid={!!errors.firstName}>
-            <FieldLabel htmlFor="firstName">firstName</FieldLabel>
+            <FieldLabel htmlFor="firstName">First name</FieldLabel>
             <Input id="first-name" type="text" placeholder="john" autoFocus {...register("firstName")} aria-invalid={!!errors.firstName} />
             {errors.firstName && <FieldError errors={[errors.firstName]} />}
           </Field>
           <Field data-invalid={!!errors.lastName}>
-            <FieldLabel htmlFor="lastName">lastName</FieldLabel>
+            <FieldLabel htmlFor="lastName">Last name</FieldLabel>
             <Input id="last-name" type="text" placeholder="doe" autoFocus {...register("lastName")} aria-invalid={!!errors.lastName} />
             {errors.lastName && <FieldError errors={[errors.lastName]} />}
           </Field>
