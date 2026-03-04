@@ -10,6 +10,7 @@ import { CustomError } from "@/lib/util/customError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 export default function Page() {
@@ -36,6 +37,7 @@ export default function Page() {
       setError("root", { message: result.error });
       return;
     }
+    toast.success("Login successfully");
     reset();
     router.push("/dashboard");
   };

@@ -14,7 +14,7 @@ type User = {
   id: string;
   email: string;
   createdAt: string;
-  rule: string;
+  rule: "admin" | "user";
   firstName: string;
   lastName: string;
 };

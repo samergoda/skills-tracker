@@ -9,6 +9,8 @@ import AddSkill from "./AddSkill";
 
 export default async function SkillsList({ skills }: { skills: Skill[] }) {
   const t = await getTranslations("HomePage");
+
+  // Need to optimize it.
   const uniqueIds = [...new Set(skills.map((skill) => skill.ownerId))];
   const skillUsers = await Promise.all(uniqueIds.map((id) => db.query.users.findFirst({ where: eq(users.id, id) })));
   function difficultyColor(diff: string) {

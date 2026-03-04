@@ -21,7 +21,9 @@ export const users = sqliteTable("users", {
   createdAt: createdAt(),
   email: text("email").unique().notNull(),
   password: text("password").notNull(),
-  rule: text("rule").notNull(),
+  rule: text("rule", { enum: ["admin", "user"] })
+    .notNull()
+    .$default(() => "user"),
   firstName: text("first-name").notNull(),
   lastName: text("last-name").notNull(),
 });

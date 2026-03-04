@@ -9,6 +9,7 @@ import { signupSchema } from "@/lib/schemes/auth.scheme";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 export default function Page() {
@@ -29,7 +30,7 @@ export default function Page() {
     },
   });
 
-  const router = useRouter()
+  const router = useRouter();
   const onSubmit = async (data: z.infer<typeof signupSchema>) => {
     const result = await registerUser(data);
 
@@ -37,6 +38,8 @@ export default function Page() {
       setError("root", { message: result.error });
       return;
     }
+
+    toast.success("Signup successfully");
     reset();
     router.push("/dashboard");
   };
