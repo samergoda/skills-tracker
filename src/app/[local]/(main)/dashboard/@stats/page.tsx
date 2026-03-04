@@ -6,15 +6,15 @@ import StatsCard from "./_components/StatsCard";
 
 export default async function Page() {
   const data = await getStats();
-  const t = await getTranslations("HomePage");
+  const t = await getTranslations("Stats");
   const skills = await findByUser();
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white p-6 space-y-10">
+    <main className="min-h-full bg-background text-foreground p-6 space-y-10">
       {/* Page Header */}
       <header>
-        <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
-        <p className="text-sm text-neutral-400 mt-2">Track your skill progress and recent activity</p>
+        <h1 className="text-3xl font-semibold tracking-tight">{t("recentActivity")}</h1>
+        <p className="text-sm text-muted-foreground mt-2">{t("trackProgress")}</p>
       </header>
 
       {/* Main Content */}
@@ -22,7 +22,7 @@ export default async function Page() {
         {/* Activity Timeline */}
         <aside className="space-y-6">
           <div className="">
-            <h2 className="text-lg font-medium">Recent Activity</h2>
+            <h2 className="text-lg font-medium">{t("recentActivity")}</h2>
             <AddProgress skills={skills} />
           </div>
 
@@ -34,14 +34,5 @@ export default async function Page() {
         </aside>
       </section>
     </main>
-  );
-}
-
-function StatCard({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
-      <div className="text-sm text-neutral-400">{label}</div>
-      <div className="mt-2 text-2xl font-semibold">{value}</div>
-    </div>
   );
 }

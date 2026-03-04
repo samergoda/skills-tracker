@@ -14,15 +14,15 @@ export const login = async ({
   password: string;
 }): Promise<{ user: Omit<User, "password">; token: string }> => {
   const match = await getUser(email);
-
+  // console.log("matchhh", match);
   const correctPW = await comparePW(password, match.password);
-
+  console.log("correctPW", correctPW);
   if (!correctPW) {
     throw new CustomError("INVALID_CREDENTIALS");
   }
 
   const token = createTokenForUser(match.id, match.rule, match.firstName, match.lastName);
-
+  console.log("token", token);
   const { password: _, ...user } = match;
 
   return { user, token };

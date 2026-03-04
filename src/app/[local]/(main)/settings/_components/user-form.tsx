@@ -6,8 +6,11 @@ import { updateUserAction } from "@/lib/actions/user.action";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function UserForm({ user }: { user: User }) {
+  const t = useTranslations("Settings");
+  const tAuth = useTranslations("Auth");
   const {
     register,
     handleSubmit,
@@ -23,36 +26,36 @@ export default function UserForm({ user }: { user: User }) {
 
   const onSubmit = async (data: Pick<User, "firstName" | "lastName" | "email"> & { password: string }) => {
     await updateUserAction(data);
-    toast.success("User has been updated");
+    toast.success(t("updateSuccess"));
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <div className="">
         <Label className="mb-2" htmlFor="firstName">
-          First name
+          {tAuth("firstName")}
         </Label>
         <Input type="text" {...register("firstName")} id="firstName" />
       </div>
       <div className="">
         <Label className="mb-2" htmlFor="lastName">
-          Last name
+          {tAuth("lastName")}
         </Label>
         <Input type="text" {...register("lastName")} id="lastName" />
       </div>
       <div className="">
         <Label className="mb-2" htmlFor="email">
-          Email
+          {tAuth("email")}
         </Label>
         <Input type="email" {...register("email")} id="email" />
       </div>
       <div className="">
         <Label className="mb-2" htmlFor="password">
-          Password
+          {tAuth("password")}
         </Label>
         <Input type="password" {...register("password")} id="password" autoComplete="off" />
       </div>
-      <SubmitButton text="Submit" disabled={!isValid || isSubmitting} />
+      <SubmitButton text={t("submit")} disabled={!isValid || isSubmitting} />
     </form>
   );
 }

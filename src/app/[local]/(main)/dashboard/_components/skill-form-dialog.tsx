@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { createGlobalSkill } from "@/lib/api/skills.api";
+import { useTranslations } from "next-intl";
 
 type Skill = {
   id: string;
@@ -15,6 +16,7 @@ type Skill = {
 };
 
 export function SkillFormDialog({ open, onOpenChange, skill }: { open: boolean; onOpenChange: (v: boolean) => void; skill: Skill | null }) {
+  const t = useTranslations("Skills");
   const [form, setForm] = useState({
     skill: "",
     logo: "",
@@ -34,7 +36,7 @@ export function SkillFormDialog({ open, onOpenChange, skill }: { open: boolean; 
       // update API
     } else {
       // create API
-      createGlobalSkill(form)
+      createGlobalSkill(form);
     }
 
     onOpenChange(false);
@@ -44,21 +46,25 @@ export function SkillFormDialog({ open, onOpenChange, skill }: { open: boolean; 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{skill ? "Edit Skill" : "Add Skill"}</DialogTitle>
+          <DialogTitle>{skill ? t("editSkill") : t("addSkill")}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
-          <Label htmlFor="skill">Skill name</Label>
-          <Input placeholder="Skill name" value={form.skill} onChange={(e) => setForm({ ...form, skill: e.target.value })} />
+          <Label htmlFor="skill">{t("skillName")}</Label>
+          <Input placeholder={t("skillNamePlaceholder")} value={form.skill} onChange={(e) => setForm({ ...form, skill: e.target.value })} />
 
-          <Label htmlFor="logo">Logo URL</Label>
-          <Input placeholder="Logo URL" value={form.logo} onChange={(e) => setForm({ ...form, logo: e.target.value })} />
+          <Label htmlFor="logo">{t("logoUrl")}</Label>
+          <Input placeholder={t("logoPlaceholder")} value={form.logo} onChange={(e) => setForm({ ...form, logo: e.target.value })} />
 
-          <Label htmlFor="category">Category</Label>
-          <Input placeholder="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
+          <Label htmlFor="category">{t("category")}</Label>
+          <Input
+            placeholder={t("categoryPlaceholderShort")}
+            value={form.category}
+            onChange={(e) => setForm({ ...form, category: e.target.value })}
+          />
 
           <Button className="w-full" onClick={handleSubmit}>
-            Save
+            {t("save")}
           </Button>
         </div>
       </DialogContent>

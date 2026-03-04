@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createState } from "@/lib/actions/stats.action";
 import { useForm } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 export default function AddProgress({ skills }: { skills: Skill[] }) {
+  const t = useTranslations("Stats");
   const {
     register,
     handleSubmit,
@@ -38,8 +40,8 @@ export default function AddProgress({ skills }: { skills: Skill[] }) {
   return (
     <div className="space-y-4">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-        <select {...register("skillId", { required: "Skill is required" })}>
-          <option value="">Select skill</option>
+        <select {...register("skillId", { required: t("skillRequired") })}>
+          <option value="">{t("selectSkill")}</option>
           {skills.map((skill) => (
             <option key={skill.id} value={skill.id}>
               {skill.name}
@@ -48,40 +50,40 @@ export default function AddProgress({ skills }: { skills: Skill[] }) {
         </select>
         {errors.skillId && <p className="text-red-500">{errors.skillId.message}</p>}
 
-        <Input type="text" {...register("note")} placeholder="Note" />
+        <Input type="text" {...register("note")} placeholder={t("notePlaceholder")} />
 
-        <Label>Progress</Label>
+        <Label>{t("progress")}</Label>
         <Input
           type="number"
           min={0}
           max={100}
           {...register("completionPercent", {
-            required: "Progress is required",
+            required: t("progressRequired"),
             valueAsNumber: true,
-            min: { value: 0, message: "Min is 0" },
-            max: { value: 100, message: "Max is 100" },
+            min: { value: 0, message: t("minProgress") },
+            max: { value: 100, message: t("maxProgress") },
           })}
-          placeholder="Progress (0-100)"
+          placeholder={t("progressPlaceholder")}
         />
         {errors.completionPercent && <p className="text-red-500">{errors.completionPercent.message}</p>}
 
-        <Label>Hours</Label>
+        <Label>{t("hours")}</Label>
         <Input
           type="number"
           min={0}
           max={24}
           {...register("hours", {
-            required: "Hours is required",
+            required: t("hoursRequired"),
             valueAsNumber: true,
-            min: { value: 0, message: "Min is 0" },
-            max: { value: 24, message: "Max is 24" },
+            min: { value: 0, message: t("minHours") },
+            max: { value: 24, message: t("maxHours") },
           })}
-          placeholder="Hours (0-24)"
+          placeholder={t("hoursPlaceholder")}
         />
         {errors.hours && <p className="text-red-500">{errors.hours.message}</p>}
 
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Adding..." : "Add Progress"}
+          {isSubmitting ? t("adding") : t("addProgress")}
         </Button>
       </form>
     </div>

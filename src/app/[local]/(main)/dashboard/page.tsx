@@ -1,5 +1,5 @@
 import { getSkills } from "@/lib/api/skills.api";
-// import { getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { SkillsTable } from "./_components/skills-table";
 
 type SkillsQuery = {
@@ -11,16 +11,15 @@ type SkillsQuery = {
 
 export default async function SkillsPage({ searchParams }: { searchParams: Promise<SkillsQuery> }) {
   const params = await searchParams;
-
   const skills = await getSkills(params);
-  // const t = await getTranslations("SkillsPage");
+  const t = await getTranslations("Skills");
 
   return (
     <div className="container mx-auto py-10 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Skills</h1>
-          <p className="text-muted-foreground text-sm">Manage your skills here.</p>
+          <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+          <p className="text-muted-foreground text-sm">{t("manageSkills")}</p>
         </div>
       </div>
 

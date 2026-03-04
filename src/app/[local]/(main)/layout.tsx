@@ -7,16 +7,13 @@ import LocaleToggle from "@/components/features/lang-toggle";
 import { ChartNoAxesColumn } from "lucide-react";
 
 export default async function MainLayout({ children }: { children: ReactNode }) {
-  // Locale
-  const locale = await getLocale();
-
   // Translations
   const t = await getTranslations("HomePage");
 
   return (
     <SidebarProvider>
       {/* Sidebar */}
-      <AppSidebar locale={locale} />
+      <AppSidebar />
       <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
         <div className="sticky top-0 z-10 flex h-16 shrink-0 items-center justify-between border-b bg-background px-4">
           {/* Sidebar trigger */}

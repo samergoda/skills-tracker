@@ -7,8 +7,10 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { updateSkill, deleteSkill } from "@/lib/actions/skills.action";
+import { useTranslations } from "next-intl";
 
 export default function ActionsSkillsList({ skill }: { skill: Skill }) {
+  const t = useTranslations("Skills");
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -40,39 +42,39 @@ export default function ActionsSkillsList({ skill }: { skill: Skill }) {
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" size="xs">
-            Edit
+            {t("edit")}
           </Button>
         </DialogTrigger>
 
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Skill</DialogTitle>
-            <DialogDescription>Update skill information below.</DialogDescription>
+            <DialogTitle>{t("editSkill")}</DialogTitle>
+            <DialogDescription>{t("editSkillDescription")}</DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSubmit(onEditSubmit)} className="space-y-4">
             <div>
-              <Label>Name</Label>
+              <Label>{t("name")}</Label>
               <Input {...register("name")} disabled={isSubmitting} />
             </div>
 
             <div>
-              <Label>Category</Label>
+              <Label>{t("category")}</Label>
               <Input {...register("category")} disabled={isSubmitting} />
             </div>
 
             <div>
-              <Label>Difficulty</Label>
+              <Label>{t("difficulty")}</Label>
               <Input {...register("difficulty")} disabled={isSubmitting} />
             </div>
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setEditOpen(false)}>
-                Cancel
+                {t("cancel")}
               </Button>
 
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Saving..." : "Save Changes"}
+                {isSubmitting ? t("saving") : t("saveChanges")}
               </Button>
             </DialogFooter>
           </form>
@@ -83,25 +85,23 @@ export default function ActionsSkillsList({ skill }: { skill: Skill }) {
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" size="xs" className="text-red-600">
-            Delete
+            {t("delete")}
           </Button>
         </DialogTrigger>
 
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Skill</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete <strong>{skill.name}</strong>? This action cannot be undone.
-            </DialogDescription>
+            <DialogTitle>{t("deleteSkill")}</DialogTitle>
+            <DialogDescription>{t("deleteSkillConfirm", { name: skill.name })}</DialogDescription>
           </DialogHeader>
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteOpen(false)}>
-              Cancel
+              {t("cancel")}
             </Button>
 
             <Button variant="destructive" onClick={onDelete}>
-              Confirm Delete
+              {t("confirmDelete")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -2,12 +2,16 @@
 import { Button } from "@/components/ui/button";
 import { deleteState } from "@/lib/actions/stats.action";
 import { Trash } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function StatsCard({ log }: { log: Stats }) {
+  const t = useTranslations("Stats");
+  const locale = useLocale();
+
   return (
-    <div key={log.id} className="bg-neutral-900 border border-neutral-800 rounded-xl p-4">
-      <div className="text-sm flex justify-between text-neutral-400">
-        {new Intl.DateTimeFormat("en-US", {
+    <div key={log.id} className="bg-card border border-border rounded-xl p-4">
+      <div className="text-sm flex justify-between text-muted-foreground">
+        {new Intl.DateTimeFormat(locale, {
           dateStyle: "medium",
           timeStyle: "short",
         }).format(new Date(log.createdAt))}
@@ -21,7 +25,7 @@ export default function StatsCard({ log }: { log: Stats }) {
         <span className="font-medium">{log.hours}h</span> — {log.note}
       </div>
 
-      <div className="mt-2 text-xs text-neutral-500">Completion: {log.completionPercent}%</div>
+      <div className="mt-2 text-xs text-muted-foreground">{t("completion", { percent: log.completionPercent })}</div>
     </div>
   );
 }

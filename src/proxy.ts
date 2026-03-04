@@ -27,7 +27,6 @@ export default async function proxy(request: NextRequest) {
   );
 
   const isPublicPage = publicPathnameRegex.test(pathname);
-
   // Extract locale from URL
   const localeMatch = pathname.match(new RegExp(`^/(${routing.locales.join("|")})`));
 
@@ -38,12 +37,19 @@ export default async function proxy(request: NextRequest) {
     return Response.redirect(new URL(`/${locale}/login`, request.url));
   }
 
-  // 2. No token and public page → allow through
+  // 2. Redirect to dashboard if locale is root
+  const locales = routing.locales;
+  const isLocaleRoot = locales.some((locale) => pathname === `/${locale}`);
+  if (isLocaleRoot) {
+    return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+  }
+
+  // 3. No token and public page → allow through
   if (!token && isPublicPage) {
     return intlMiddleware(request);
   }
 
-  // 3. Has token → verify it
+  // 4. Has token → verify it
   let isValidToken = false;
   if (token) {
     try {
@@ -58,12 +64,12 @@ export default async function proxy(request: NextRequest) {
     }
   }
 
-  // 4. Valid token + public page → redirect to dashboard (already logged in)
+  // 5. Valid token + public page → redirect to dashboard (already logged in)
   if (isValidToken && isPublicPage) {
     return Response.redirect(new URL(`/${locale}/dashboard`, request.url));
   }
 
-  // 5. Valid token + protected page → allow through
+  // 6. Valid token + protected page → allow through
   return intlMiddleware(request);
 }
 

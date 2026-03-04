@@ -5,7 +5,7 @@ import { Suspense } from "react";
 type Props = {
   children: React.ReactNode;
   params: {
-    locale: string;
+    locale: Locale;
   };
 };
 
@@ -27,7 +27,7 @@ export function generateStaticParams() {
 export default async function RootLayout({ children, params }: Props) {
   return (
     <html lang={params.locale} dir={params.locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background text-foreground`}>
         <Suspense fallback={<div>Loading...</div>}>
           <RootProviders>{children}</RootProviders>
         </Suspense>

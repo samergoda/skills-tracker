@@ -11,8 +11,10 @@ import { Input } from "@/components/ui/input";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useRouter, useSearchParams } from "next/navigation";
 import { deleteGlobalSkill } from "@/lib/api/skills.api";
+import { useTranslations } from "next-intl";
 
 export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) {
+  const t = useTranslations("Skills");
   const [skills, setSkills] = useState(initialSkills);
   const [selected, setSelected] = useState<AddedSkill | null>(null);
   const [open, setOpen] = useState(false);
@@ -20,6 +22,7 @@ export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) 
   const router = useRouter();
   const searchParams = useSearchParams();
   const debouncedSearch = useDebounce(search, 500);
+
   // Sync state when the server re-fetches data on page change
   useEffect(() => {
     setSkills(initialSkills);
@@ -50,18 +53,18 @@ export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) 
             setOpen(true);
           }}>
           <Plus className="w-4 h-4 mr-2" />
-          Add Skill
+          {t("addSkill")}
         </Button>
       </div>
-      <Input placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
+      <Input placeholder={t("search")} value={search} onChange={(e) => setSearch(e.target.value)} />
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Logo</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Created</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>{t("logo")}</TableHead>
+            <TableHead>{t("name")}</TableHead>
+            <TableHead>{t("category")}</TableHead>
+            <TableHead>{t("created")}</TableHead>
+            <TableHead className="text-right">{t("actions")}</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -69,7 +72,7 @@ export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) 
           {skills.length === 0 && (
             <TableRow>
               <TableCell colSpan={5} className="text-center">
-                No skills found
+                {t("noSkills")}
               </TableCell>
             </TableRow>
           )}
@@ -77,7 +80,13 @@ export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) 
           {skills.map((skill) => (
             <TableRow key={skill.id}>
               <TableCell>
-                <Image src={skill.logo || 'https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/2.jpg'} alt={skill.skill} width={40} height={40} className="rounded-md" />
+                <Image
+                  src={skill.logo || "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/2.jpg"}
+                  alt={skill.skill}
+                  width={40}
+                  height={40}
+                  className="rounded-md"
+                />
               </TableCell>
 
               <TableCell className="font-medium">{skill.skill}</TableCell>

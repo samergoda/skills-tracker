@@ -2,10 +2,11 @@
 
 import { updateUserRuleAction } from "@/lib/actions/user.action";
 import { Button } from "@/components/ui/button";
-import { CustomError } from "@/lib/util/customError";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function UsersRules({ currentUser, users }: { currentUser: User; users: User[] }) {
+  const t = useTranslations("Settings");
   if (currentUser.rule !== "admin") return null;
 
   return (
@@ -16,8 +17,7 @@ export default function UsersRules({ currentUser, users }: { currentUser: User; 
           onSubmit={async (e) => {
             e.preventDefault();
             await updateUserRuleAction(u.id, u.rule);
-            toast.success("Updated user rule");
-            // if (res instanceof CustomError) res.toast();
+            toast.success(t("updateRuleSuccess"));
           }}
           className="flex items-center gap-4">
           <input type="hidden" name="id" value={u.id} />
@@ -30,11 +30,11 @@ export default function UsersRules({ currentUser, users }: { currentUser: User; 
           </div>
 
           <select name="rule" defaultValue={u.rule} className="border rounded px-2 py-1">
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
+            <option value="admin">{t("admin")}</option>
+            <option value="user">{t("user")}</option>
           </select>
 
-          <Button type="submit">Update</Button>
+          <Button type="submit">{t("update")}</Button>
         </form>
       ))}
     </div>

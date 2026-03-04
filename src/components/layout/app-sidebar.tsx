@@ -4,41 +4,45 @@ import LogoutButton from "../features/logout-button";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Home, Settings } from "lucide-react";
 import clsx from "clsx";
+import { useLocale, useTranslations } from "next-intl";
 
 const RTL_LOCALES = ["ar"];
 
 type NavItem = {
-  label: string;
+  labelKey: string;
   href: string;
   icon: React.ElementType;
 };
 
 const NAV_ITEMS: NavItem[] = [
   {
-    label: "Dashboard",
+    labelKey: "dashboard",
     href: "/dashboard",
     icon: Home,
   },
   {
-    label: "Settings",
+    labelKey: "settings",
     href: "/settings",
     icon: Settings,
   },
 ];
 
-export function AppSidebar({ locale }: { locale: string }) {
-  const side = RTL_LOCALES.includes(locale) ? "right" : "left";
+export function AppSidebar() {
+  const t = useTranslations("Navigation");
+  const locale = useLocale();
   const pathname = usePathname();
 
+  const side = locale === "ar" ? "right" : "left";
+
   return (
-    <Sidebar side={side}>
+    <Sidebar>
       <SidebarHeader />
 
       <SidebarContent>
         <SidebarGroup>
           <nav className="space-y-1">
             {NAV_ITEMS.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = pathname.endsWith(item.href);
               const Icon = item.icon;
 
               return (
@@ -47,10 +51,11 @@ export function AppSidebar({ locale }: { locale: string }) {
                   href={item.href}
                   className={clsx(
                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+                    "flex-row rtl:flex-row-reverse",
                     isActive ? "bg-muted font-medium" : "hover:bg-muted/60",
                   )}>
-                  <Icon className="h-4 w-4" />
-                  <span>{item.label}</span>
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{t(item.labelKey as "dashboard" | "settings")}</span>
                 </Link>
               );
             })}

@@ -15,9 +15,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createSkill } from "@/lib/actions/skills.action";
 import { useForm } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 export default function AddSkill() {
-  // const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations("Skills");
   const {
     register,
     handleSubmit,
@@ -37,20 +38,13 @@ export default function AddSkill() {
     try {
       const result = await createSkill(data);
       if (result.success) {
-        // Reset form
         reset({
           name: "",
           category: "",
           difficulty: "",
         });
-
-        // Close dialog
-        // setIsOpen(false);
-
-        // Show success feedback
         console.log("✓ Skill created successfully. Page will be updated automatically.");
       } else {
-        // Show error feedback
         console.error("✗ " + "Failed to add skill");
       }
     } catch (error) {
@@ -61,47 +55,45 @@ export default function AddSkill() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Add skill</Button>
+        <Button>{t("addSkill")}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add new skill</DialogTitle>
-          <DialogDescription>
-            Create a new skill to track your learning progress. The skill list will update automatically.
-          </DialogDescription>
+          <DialogTitle>{t("addNewSkill")}</DialogTitle>
+          <DialogDescription>{t("addSkillDescription")}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <FieldGroup>
             <Field>
-              <Label htmlFor="skill-name">Name</Label>
+              <Label htmlFor="skill-name">{t("name")}</Label>
               <Input
                 id="skill-name"
                 type="text"
-                placeholder="Enter skill name"
-                {...register("name", { required: "Skill name is required" })}
+                placeholder={t("namePlaceholder")}
+                {...register("name", { required: t("nameRequired") })}
                 disabled={isSubmitting}
               />
               {errors.name && <span className="text-red-500 text-sm">{errors.name.message}</span>}
             </Field>
             <Field>
-              <Label htmlFor="skill-category">Category</Label>
+              <Label htmlFor="skill-category">{t("category")}</Label>
               <Input
                 id="skill-category"
                 type="text"
-                placeholder="Enter skill category"
-                {...register("category", { required: "Category is required" })}
+                placeholder={t("categoryPlaceholder")}
+                {...register("category", { required: t("categoryRequired") })}
                 disabled={isSubmitting}
               />
               {errors.category && <span className="text-red-500 text-sm">{errors.category.message}</span>}
             </Field>
             <Field>
-              <Label htmlFor="skill-difficulty">Difficulty</Label>
+              <Label htmlFor="skill-difficulty">{t("difficulty")}</Label>
               <Input
                 id="skill-difficulty"
                 type="text"
-                placeholder="e.g., Beginner, Intermediate, Advanced"
-                {...register("difficulty", { required: "Difficulty is required" })}
+                placeholder={t("difficultyPlaceholder")}
+                {...register("difficulty", { required: t("difficultyRequired") })}
                 disabled={isSubmitting}
               />
               {errors.difficulty && <span className="text-red-500 text-sm">{errors.difficulty.message}</span>}
@@ -110,12 +102,12 @@ export default function AddSkill() {
           <DialogFooter>
             <DialogClose asChild>
               <Button type="button" variant="outline">
-                Cancel
+                {t("cancel")}
               </Button>
             </DialogClose>
             <DialogClose asChild>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Creating..." : "Add skill"}
+                {isSubmitting ? t("creating") : t("addSkill")}
               </Button>
             </DialogClose>
           </DialogFooter>

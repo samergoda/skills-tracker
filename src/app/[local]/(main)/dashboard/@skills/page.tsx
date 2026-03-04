@@ -4,13 +4,13 @@ import SkillsList from "./_components/SkillsList";
 
 export default async function page() {
   // Translations
-  const t = await getTranslations("HomePage");
+  const t = await getTranslations("Skills");
 
   // Get skills based on rule
   const skills = await findByUser();
   return (
     <>
-      <h1>{t("title")} skills</h1>
+      <h1>{t("title")}</h1>
       <SkillsList skills={skills} />
     </>
   );
