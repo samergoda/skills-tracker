@@ -1,7 +1,6 @@
 "use server";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { redirect } from "next/navigation";
 import { loginSchema, signupSchema } from "../schemes/auth.scheme";
 import { login, signup } from "../services/auth.service";
 import { CustomError } from "../util/customError";

@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, revalidateTag, updateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { skillRepository } from "../services/skills.service";
 import { SkillsSchema } from "../schemes/skills.schema";
 import { getUserFromToken } from "../util/authTools";
