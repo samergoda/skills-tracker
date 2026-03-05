@@ -1,29 +1,42 @@
-import { getUserAction } from "@/lib/actions/user.action";
+import { getUserAction, getAllUsersAction } from "@/lib/actions/user.action";
 import UserForm from "./_components/user-form";
-import { db } from "@/db/db";
 import UsersRules from "./_components/users-rules";
-/*
-  id: 'b4904a87-7056-4891-a1df-545fb0293ac5',
-  createdAt: '2026-02-20 05:46:27',
-  email: 'admin133766@1elevate.com',
-  password: '$2b$10$1Ul5JSi7r67OF7tmvoAwTOFtFda/18Zt/Ie3jAlWx9uRm.yswIYqu',
-  rule: 'admin',
-  firstName: 'samer',
-  lastName: 'goda'
-*/
-export default async function page() {
+
+export default async function Page() {
   const user = await getUserAction();
-  const users = await db.query.users.findMany();
+  const users = await getAllUsersAction();
 
-  console.log("usersss", users);
-
-  console.log("user", user);
   return (
-    <div className="">
-      <div className="">
-        <UserForm user={user} />
+    <main className="min-h-screen bg-gray-50 py-10 px-4">
+      <div className="max-w-5xl mx-auto space-y-10">
+        {/* Page Header */}
+        <section>
+          <h1 className="text-3xl font-semibold tracking-tight">User Management</h1>
+          <p className="text-gray-500 mt-2">Manage user information and permissions.</p>
+        </section>
+
+        {/* User Form Card */}
+        <section className="bg-white rounded-xl shadow-sm border p-6">
+          <div className="mb-6">
+            <h2 className="text-lg font-medium">Profile Settings</h2>
+            <p className="text-sm text-gray-500 mt-1">Update your personal information.</p>
+          </div>
+
+          <UserForm user={user} />
+        </section>
+
+        {/* Users & Roles Section for admin only */}
+        {user.rule === "admin" && (
+          <section className="bg-white rounded-xl shadow-sm border p-6">
+            <div className="mb-6">
+              <h2 className="text-lg font-medium">Users & Permissions</h2>
+              <p className="text-sm text-gray-500 mt-1">Control access and assign roles.</p>
+            </div>
+
+            <UsersRules currentUser={user} users={users} />
+          </section>
+        )}
       </div>
-      <UsersRules currentUser={user} users={users} />
-    </div>
+    </main>
   );
 }

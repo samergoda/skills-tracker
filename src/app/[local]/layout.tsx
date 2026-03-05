@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import RootProviders from "@/components/providers";
 import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 type Props = {
   children: React.ReactNode;
@@ -28,9 +29,11 @@ export default async function RootLayout({ children, params }: Props) {
   return (
     <html lang={params.locale} dir={params.locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background text-foreground`}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <RootProviders>{children}</RootProviders>
-        </Suspense>
+        <ErrorBoundary fallback={<div>Something went wrong!</div>}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <RootProviders>{children}</RootProviders>
+          </Suspense>
+        </ErrorBoundary>
       </body>
     </html>
   );

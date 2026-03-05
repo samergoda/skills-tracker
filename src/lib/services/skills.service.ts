@@ -2,7 +2,7 @@ import "server-only";
 
 import { skills } from "@/db/schema";
 import { db } from "@/db/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { getUserFromToken } from "../util/authTools";
 import { findAllSkills, findSkillsByUserId } from "../util/skillsTools";
 import { revalidatePath, revalidateTag } from "next/cache";
@@ -34,9 +34,6 @@ export const skillRepository = {
       difficulty: data.difficulty,
       is_public: "1",
     });
-
-
-
   },
 
   async update(id: string, data: Pick<Skill, "name" | "category" | "difficulty">) {
@@ -51,6 +48,7 @@ export const skillRepository = {
   },
 
   async delete(id: string) {
-    await db.delete(skills).where(eq(skills.id, id));
+    const user = await getUserFromToken();
+    await db.delete(skills).where(and(eq(skills.id, id), eq(skills.ownerId, user.id)));
   },
 };

@@ -5,23 +5,19 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db/db";
 import { users } from "@/db/schema";
 import AddSkill from "./AddSkill";
+import { inArray } from "drizzle-orm";
+import { difficultyColor } from "../_util/util";
 
 export default async function SkillsList({ skills }: { skills: Skill[] }) {
   const t = await getTranslations("Skills");
 
-  // Need to optimize it.
   const uniqueIds = [...new Set(skills.map((skill) => skill.ownerId))];
-  const skillUsers = await Promise.all(uniqueIds.map((id) => db.query.users.findFirst({ where: eq(users.id, id) })));
-  function difficultyColor(diff: string) {
-    switch (diff) {
-      case "Beginner":
-        return "bg-green-100 text-green-700";
-      case "Intermediate":
-        return "bg-yellow-100 text-yellow-700";
-      case "Advanced":
-        return "bg-red-100 text-red-700";
-    }
-  }
+
+  // Single query for all users
+  const skillUsers = await db.query.users.findMany({
+    where: inArray(users.id, uniqueIds),
+    columns: { id: true, firstName: true, lastName: true },
+  });
 
   const skillsUserMap = new Map<string, { firstName: string; lastName: string }>();
   skillUsers.forEach((user) => {

@@ -11,10 +11,11 @@ import { Input } from "@/components/ui/input";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useRouter, useSearchParams } from "next/navigation";
 import { deleteGlobalSkill } from "@/lib/api/skills.api";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 export function SkillsTable({ initialSkills }: { initialSkills: AddedSkill[] }) {
   const t = useTranslations("Skills");
+  const locale = useLocale();
   const [skills, setSkills] = useState(initialSkills);
   const [selected, setSelected] = useState<AddedSkill | null>(null);
   const [open, setOpen] = useState(false);

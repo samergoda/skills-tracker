@@ -1,6 +1,7 @@
 "use server";
 
-import { getUser, updateUser, updateUserRule } from "../services/auth.service";
+import { getUser, updateUser, updateUserRule } from "../services/user.service";
+import { getAllUsers } from "../services/user.service";
 import { getUserFromToken } from "../util/authTools";
 import { CustomError } from "../util/customError";
 
@@ -19,4 +20,8 @@ export async function updateUserRuleAction(id: string, rule: "admin" | "user") {
   if (!id || !rule) return new CustomError("Invalid data to update user rule");
 
   return await updateUserRule(id, rule);
+}
+
+export async function getAllUsersAction() {
+  return await getAllUsers();
 }
