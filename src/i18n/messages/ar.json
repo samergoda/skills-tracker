@@ -5,7 +5,8 @@
   },
   "Navigation": {
     "dashboard": "لوحة التحكم",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "chatbot": "المساعد الذكي"
   },
   "Auth": {
     "login": "تسجيل الدخول",
