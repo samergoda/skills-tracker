@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
 
 export default function Page() {
   const t = useTranslations("Auth");
@@ -90,6 +92,8 @@ export default function Page() {
           </Link>
         </p>
       </div>
+
+      <Button onClick={() => signIn("github")}>Login with GitHub</Button>
     </div>
   );
 }
