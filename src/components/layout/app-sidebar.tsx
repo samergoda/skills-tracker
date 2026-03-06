@@ -4,7 +4,7 @@ import LogoutButton from "../features/logout-button";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Home, Settings } from "lucide-react";
 import clsx from "clsx";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { SiChatbot } from "react-icons/si";
 
 type NavItem = {
@@ -28,16 +28,16 @@ const NAV_ITEMS: NavItem[] = [
     labelKey: "chatbot",
     href: "/chatbot",
     icon: SiChatbot,
-  }
+  },
 ];
 
 export function AppSidebar() {
   const t = useTranslations("Navigation");
   const pathname = usePathname();
-
+  const locale = useLocale();
 
   return (
-    <Sidebar>
+    <Sidebar side={locale === "ar" ? "right" : "left"}>
       <SidebarHeader />
 
       <SidebarContent>
@@ -57,7 +57,7 @@ export function AppSidebar() {
                     isActive ? "bg-muted font-medium" : "hover:bg-muted/60",
                   )}>
                   <Icon className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{t(item.labelKey as "dashboard" | "settings" | 'chatbot')}</span>
+                  <span className="truncate">{t(item.labelKey as "dashboard" | "settings" | "chatbot")}</span>
                 </Link>
               );
             })}
