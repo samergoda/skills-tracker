@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import RootProviders from "@/components/providers";
-import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
@@ -38,9 +37,7 @@ export default async function RootLayout({ children, params }: { children: React
     <html lang={local} dir={local === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background text-foreground`}>
         <ErrorBoundary fallback={<div>Something went wrong!</div>}>
-          <Suspense fallback={<div>Loading...</div>}>
-            <RootProviders>{children}</RootProviders>
-          </Suspense>
+          <RootProviders>{children}</RootProviders>
         </ErrorBoundary>
       </body>
     </html>

@@ -2,7 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { ReactNode, Suspense } from "react";
 import { ThemeSwitcher } from "@/components/features/theme-switcher";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import LocaleToggle from "@/components/features/lang-toggle";
 import { ChartNoAxesColumn } from "lucide-react";
 
