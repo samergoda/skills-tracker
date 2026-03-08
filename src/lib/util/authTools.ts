@@ -8,7 +8,6 @@ import bcrypt from "bcrypt";
 import { getLocale } from "next-intl/server";
 import { getToken } from "./getToken";
 import { redirect } from "@/i18n/navigation";
-import { CustomError } from "./customError";
 
 const SECRET = process.env.SECRET;
 

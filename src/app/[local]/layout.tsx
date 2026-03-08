@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
+import { hasLocale } from "next-intl";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,10 +25,15 @@ export function generateStaticParams() {
 export default async function RootLayout({ children, params }: { children: React.ReactNode; params: Promise<{ local: string }> }) {
   const { local } = await params;
 
+  // Set the locale for the request
+  setRequestLocale(local);
+
   // Check if the locale is valid
-  if (!routing.locales.includes(local as Locale)) {
+  // if (!routing.locales.includes(local as Locale)) // Old way
+  if (!hasLocale(routing.locales, local)) {
     notFound();
   }
+
   return (
     <html lang={local} dir={local === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background text-foreground`}>

@@ -5,7 +5,6 @@ import { db } from "@/db/db";
 import { and, eq } from "drizzle-orm";
 import { getUserFromToken } from "../util/authTools";
 import { findAllSkills, findSkillsByUserId } from "../util/skillsTools";
-import { revalidatePath, revalidateTag } from "next/cache";
 
 export const skillRepository = {
   async findByUser() {
