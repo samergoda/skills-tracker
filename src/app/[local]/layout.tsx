@@ -5,6 +5,7 @@ import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,9 +37,11 @@ export default async function RootLayout({ children, params }: { children: React
   return (
     <html lang={local} dir={local === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background text-foreground`}>
-        <ErrorBoundary fallback={<div>Something went wrong!</div>}>
-          <RootProviders>{children}</RootProviders>
-        </ErrorBoundary>
+        <Suspense>
+          <ErrorBoundary fallback={<div>Something went wrong!</div>}>
+            <RootProviders>{children}</RootProviders>
+          </ErrorBoundary>
+        </Suspense>
       </body>
     </html>
   );
