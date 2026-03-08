@@ -101,5 +101,9 @@
     "update": "Update",
     "admin": "Admin",
     "user": "User"
+  },
+  "Pagination": {
+    "next": "Next",
+    "previous": "Previous"
   }
 }

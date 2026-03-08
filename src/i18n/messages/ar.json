@@ -101,5 +101,9 @@
     "update": "تحديث",
     "admin": "مدير",
     "user": "مستخدم"
+  },
+  "Pagination": {
+    "previous": "السابق",
+    "next": "التالي"
   }
 }
