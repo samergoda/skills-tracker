@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import EmptySkillsList from "./EmptySkillsList";
 import ActionsSkillsList from "./ActionsSkillsList";
-import { eq } from "drizzle-orm";
 import { db } from "@/db/db";
 import { users } from "@/db/schema";
 import AddSkill from "./AddSkill";

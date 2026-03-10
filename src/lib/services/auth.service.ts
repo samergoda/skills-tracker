@@ -22,6 +22,7 @@ export const login = async ({
   }
 
   const token = createTokenForUser(match.id, match.rule, match.firstName, match.lastName);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _, ...user } = match;
 
   return { user, token };
