@@ -9,6 +9,7 @@ import { revalidateTag } from "next/cache";
 export const statsRepository = {
   async findByUser() {
     const user = await getUserFromToken();
+    console.log("sttaaatttsss called");
 
     // Get user's data
     return db.query.progressEntries.findMany({ where: eq(progressEntries.userId, user.id) });

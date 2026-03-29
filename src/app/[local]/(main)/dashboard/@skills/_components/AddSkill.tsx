@@ -34,7 +34,6 @@ export default function AddSkill() {
   });
 
   async function onSubmit(data: { name: string; category: string; difficulty: string }) {
-    console.log("create skill", data);
     try {
       const result = await createSkill(data);
       if (result.success) {
@@ -43,12 +42,11 @@ export default function AddSkill() {
           category: "",
           difficulty: "",
         });
-        console.log("✓ Skill created successfully. Page will be updated automatically.");
       } else {
-        console.error("✗ " + "Failed to add skill");
+        console.error("Failed to add skill");
       }
     } catch (error) {
-      console.error("✗ Error creating skill:", error);
+      console.error("Error creating skill:", error);
     }
   }
 

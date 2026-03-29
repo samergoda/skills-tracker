@@ -36,7 +36,6 @@ export const registerUser = async (input: z.infer<typeof signupSchema>) => {
 
 export const signinUser = async (input: z.infer<typeof loginSchema>) => {
   const parsed = loginSchema.safeParse(input);
-  console.log("parsed", parsed);
   if (!parsed.success) {
     return { success: false, error: "Invalid form data" };
   }

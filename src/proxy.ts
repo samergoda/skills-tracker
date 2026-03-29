@@ -59,7 +59,7 @@ export default async function proxy(request: NextRequest) {
       // Invalid token → delete the bad cookie and redirect to login
       const response = NextResponse.redirect(new URL(`/${locale}/login`, request.url));
       response.cookies.delete(COOKIE_NAME);
-      console.log(e);
+      void e;
       return response;
     }
   }
