@@ -43,10 +43,12 @@ export default function AddSkill() {
           difficulty: "",
         });
       } else {
-        console.error("Failed to add skill");
+        // console.error("Failed to add skill");
+        throw new Error("Failed to add skill");
       }
     } catch (error) {
-      console.error("Error creating skill:", error);
+      // console.error("Error creating skill:", error);
+      throw new Error(error as string);
     }
   }
 

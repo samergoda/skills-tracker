@@ -10,6 +10,9 @@ Skill Tracker is a comprehensive web application designed to help users track th
 - **User Authorization** : Use RBAC (Role Based Access Control) to manage user permissions.
 - **Multi-Language Support**: Built-in support for multiple languages.
 - **Responsive Design**: Modern, mobile-friendly interface.
+- **Chatbot**: Use AI to answer questions about skills and progress tracking.
+- **Unit Testing**: Use Vitest to test the application.
+- **oxlint**: Use oxlint to lint the application.
 
 ## Tech Stack
 
@@ -21,6 +24,8 @@ Skill Tracker is a comprehensive web application designed to help users track th
 - **Validation** :[Zod](https://zod.dev/)
 - **Internationalization**: [next-intl](https://next-intl.vercel.app/)
 - **Database**: [Turso](https://turso.com/)
+- **Testing**: [Vitest](https://vitest.dev/)
+- **Linting**: [oxlint](https://oxlint.dev/)
 
 ## Getting Started
 
@@ -73,6 +78,11 @@ Skill Tracker is a comprehensive web application designed to help users track th
 
 ```
 src/
+├── __test__/             # Unit tests
+    ├── __mocks__        # Mock files
+    ├── main/             # Main application tests
+    └── auth/             # Auth related tests
+    └── setup.ts          # Setup file for tests
 ├── app/                  # Next.js App Router
 │   ├── [local]/          # Internationalized routes
 │   │   ├── (main)/       # Main application layout

@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { sql } from "drizzle-orm";
-import { integer, numeric, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { numeric, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 const id = () =>
   text("id")
@@ -12,9 +12,9 @@ const createdAt = () =>
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull();
 
-const date = (name: string) => text(name);
+// const date = (name: string) => text(name);
 
-const boolean = (field: string) => integer(field, { mode: "boolean" });
+// const boolean = (field: string) => integer(field, { mode: "boolean" });
 
 export const users = sqliteTable("users", {
   id: id(),

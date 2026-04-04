@@ -14,7 +14,7 @@ export default function UserForm({ user }: { user: User }) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { isSubmitting, isValid },
   } = useForm({
     defaultValues: {
       firstName: user.firstName,
