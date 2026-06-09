@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 
 // ── mock skills service ───────────────────────────────────────────────────────
 const mockSkillRepository = vi.hoisted(() => ({
@@ -54,7 +54,7 @@ const MOCK_SKILLS = [
 describe("skills action – findByUser", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns parsed skills array from skillRepository", async () => {
+  test("returns parsed skills array from skillRepository", async () => {
     mockSkillRepository.findByUser.mockResolvedValue(MOCK_SKILLS);
 
     const result = await findByUser();
@@ -64,7 +64,7 @@ describe("skills action – findByUser", () => {
     expect(result[0].name).toBe("TypeScript");
   });
 
-  it("returns an empty array when user has no skills", async () => {
+  test("returns an empty array when user has no skills", async () => {
     mockSkillRepository.findByUser.mockResolvedValue([]);
 
     const result = await findByUser();
@@ -76,7 +76,7 @@ describe("skills action – findByUser", () => {
 describe("skills action – createSkill", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("creates a skill and returns success", async () => {
+  test("creates a skill and returns success", async () => {
     mockGetUserFromToken.mockResolvedValue(MOCK_USER);
     mockSkillRepository.create.mockResolvedValue(undefined);
 
@@ -98,7 +98,7 @@ describe("skills action – createSkill", () => {
 describe("skills action – updateSkill", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("updates a skill and returns success", async () => {
+  test("updates a skill and returns success", async () => {
     mockSkillRepository.update.mockResolvedValue(undefined);
 
     const result = await updateSkill("skill-1", {
@@ -119,7 +119,7 @@ describe("skills action – updateSkill", () => {
 describe("skills action – deleteSkill", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("deletes a skill and returns success", async () => {
+  test("deletes a skill and returns success", async () => {
     mockSkillRepository.delete.mockResolvedValue(undefined);
 
     const result = await deleteSkill("skill-1");

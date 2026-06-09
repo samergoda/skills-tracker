@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 
 // ── mock drizzle-orm ──────────────────────────────────────────────────────────
 vi.mock("drizzle-orm", () => ({
@@ -84,7 +84,7 @@ const MOCK_STATS = [
 describe("statsRepository – findByUser", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("queries progress entries for the authenticated user", async () => {
+  test("queries progress entries for the authenticated user", async () => {
     mockGetUserFromToken.mockResolvedValue(MOCK_USER);
     mockFindMany.mockResolvedValue(MOCK_STATS);
 
@@ -94,7 +94,7 @@ describe("statsRepository – findByUser", () => {
     expect(result).toEqual(MOCK_STATS);
   });
 
-  it("returns empty array when user has no stats", async () => {
+  test("returns empty array when user has no stats", async () => {
     mockGetUserFromToken.mockResolvedValue(MOCK_USER);
     mockFindMany.mockResolvedValue([]);
 
@@ -107,7 +107,7 @@ describe("statsRepository – findByUser", () => {
 describe("statsRepository – create", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("inserts progress entry and revalidates the cache tag", async () => {
+  test("inserts progress entry and revalidates the cache tag", async () => {
     mockGetUserFromToken.mockResolvedValue(MOCK_USER);
 
     await statsRepository.create({
@@ -133,7 +133,7 @@ describe("statsRepository – create", () => {
 describe("statsRepository – delete", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("deletes stat entry by id and revalidates the cache tag", async () => {
+  test("deletes stat entry by id and revalidates the cache tag", async () => {
     mockGetUserFromToken.mockResolvedValue(MOCK_USER);
 
     await statsRepository.delete("stat-1");

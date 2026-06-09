@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, expect, vi, beforeEach, test } from "vitest";
 
 // ── mock authTools ────────────────────────────────────────────────────────────
 const mockGetSession = vi.fn();
@@ -28,7 +28,7 @@ const MOCK_SESSION = {
 describe("chat action – sendMessageAction", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns AI response when user has a valid session", async () => {
+  test("returns AI response when user has a valid session", async () => {
     mockGetSession.mockResolvedValue(MOCK_SESSION);
     mockGeminiChatbot.mockResolvedValue("Hello! How can I help you with your skills?");
 
@@ -39,7 +39,7 @@ describe("chat action – sendMessageAction", () => {
     expect(result).toBe("Hello! How can I help you with your skills?");
   });
 
-  it("throws Unauthorized error when session is null/undefined", async () => {
+  test("throws Unauthorized error when session is null/undefined", async () => {
     mockGetSession.mockResolvedValue(null);
 
     await expect(sendMessageAction("Hello")).rejects.toThrow("Unauthorized");
@@ -47,7 +47,7 @@ describe("chat action – sendMessageAction", () => {
     expect(mockGeminiChatbot).not.toHaveBeenCalled();
   });
 
-  it("propagates errors from the Gemini chatbot", async () => {
+  test("propagates errors from the Gemini chatbot", async () => {
     mockGetSession.mockResolvedValue(MOCK_SESSION);
     mockGeminiChatbot.mockRejectedValue(new Error("API quota exceeded"));
 

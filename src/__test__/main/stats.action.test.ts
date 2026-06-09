@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 
 // ── mock stats service ────────────────────────────────────────────────────────
 const mockStatsRepository = vi.hoisted(() => ({
@@ -27,7 +27,7 @@ const MOCK_STATS: Stats[] = [
 describe("stats action – getStats", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns stats from statsRepository", async () => {
+  test("returns stats from statsRepository", async () => {
     mockStatsRepository.findByUser.mockResolvedValue(MOCK_STATS);
 
     const result = await getStats();
@@ -36,7 +36,7 @@ describe("stats action – getStats", () => {
     expect(result).toEqual(MOCK_STATS);
   });
 
-  it("returns an empty array when no stats exist", async () => {
+  test("returns an empty array when no stats exist", async () => {
     mockStatsRepository.findByUser.mockResolvedValue([]);
 
     const result = await getStats();
@@ -48,7 +48,7 @@ describe("stats action – getStats", () => {
 describe("stats action – createState", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("delegates to statsRepository.create with correct data", async () => {
+  test("delegates to statsRepository.create with correct data", async () => {
     mockStatsRepository.create.mockResolvedValue(undefined);
 
     await createState({
@@ -70,7 +70,7 @@ describe("stats action – createState", () => {
 describe("stats action – deleteState", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("delegates to statsRepository.delete with correct id", async () => {
+  test("delegates to statsRepository.delete with correct id", async () => {
     mockStatsRepository.delete.mockResolvedValue(undefined);
 
     await deleteState("stat-1");

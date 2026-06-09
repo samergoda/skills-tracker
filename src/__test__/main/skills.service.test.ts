@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, expect, vi, beforeEach, test } from "vitest";
 
 // ── mock drizzle-orm ──────────────────────────────────────────────────────────
 vi.mock("drizzle-orm", () => ({
@@ -99,7 +99,7 @@ const MOCK_SKILLS = [
 describe("skillRepository – findByUser", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns only user's skills for a regular user", async () => {
+  test("returns only user's skills for a regular user", async () => {
     mockGetUserFromToken.mockResolvedValue(MOCK_REGULAR_USER);
     mockFindSkillsByUserId.mockResolvedValue(MOCK_SKILLS);
 
@@ -110,7 +110,7 @@ describe("skillRepository – findByUser", () => {
     expect(result).toEqual(MOCK_SKILLS);
   });
 
-  it("returns all skills for an admin user", async () => {
+  test("returns all skills for an admin user", async () => {
     mockGetUserFromToken.mockResolvedValue(MOCK_ADMIN_USER);
     mockFindAllSkills.mockResolvedValue(MOCK_SKILLS);
 
@@ -125,7 +125,7 @@ describe("skillRepository – findByUser", () => {
 describe("skillRepository – create", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("inserts a new skill with the correct owner id", async () => {
+  test("inserts a new skill with the correct owner id", async () => {
     mockGetUserFromToken.mockResolvedValue(MOCK_REGULAR_USER);
 
     await skillRepository.create({
@@ -149,7 +149,7 @@ describe("skillRepository – create", () => {
 describe("skillRepository – update", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("calls db.update with new skill data", async () => {
+  test("calls db.update with new skill data", async () => {
     await skillRepository.update("skill-1", {
       name: "TypeScript Pro",
       category: "Programming",
@@ -168,7 +168,7 @@ describe("skillRepository – update", () => {
 describe("skillRepository – delete", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("deletes a skill that belongs to the authenticated user", async () => {
+  test("deletes a skill that belongs to the authenticated user", async () => {
     mockGetUserFromToken.mockResolvedValue(MOCK_REGULAR_USER);
 
     await skillRepository.delete("skill-1");

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 import { CustomError } from "@/lib/util/customError";
 
 // ── mock drizzle-orm ──────────────────────────────────────────────────────────
@@ -64,7 +64,7 @@ const MOCK_USER = {
 describe("user.service – getAllUsers", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns all users from the database", async () => {
+  test("returns all users from the database", async () => {
     mockFindMany.mockResolvedValue([MOCK_USER]);
 
     const result = await getAllUsers();
@@ -73,7 +73,7 @@ describe("user.service – getAllUsers", () => {
     expect(result[0].email).toBe(MOCK_USER.email);
   });
 
-  it("returns an empty array when no users exist", async () => {
+  test("returns an empty array when no users exist", async () => {
     mockFindMany.mockResolvedValue([]);
 
     const result = await getAllUsers();
@@ -85,7 +85,7 @@ describe("user.service – getAllUsers", () => {
 describe("user.service – getUser", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns user when found by email", async () => {
+  test("returns user when found by email", async () => {
     mockFindFirst.mockResolvedValue(MOCK_USER);
 
     const result = await getUser("test@example.com");
@@ -93,7 +93,7 @@ describe("user.service – getUser", () => {
     expect(result).toEqual(MOCK_USER);
   });
 
-  it("throws CustomError when user is not found", async () => {
+  test("throws CustomError when user is not found", async () => {
     mockFindFirst.mockResolvedValue(null);
 
     await expect(getUser("notfound@example.com")).rejects.toThrow(CustomError);
@@ -103,7 +103,7 @@ describe("user.service – getUser", () => {
 describe("user.service – updateUser", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("hashes password and returns updated user", async () => {
+  test("hashes password and returns updated user", async () => {
     const updatedUser = { ...MOCK_USER, firstName: "Jane" };
     mockedHashPW.mockResolvedValue("new-hashed-pw");
     mockReturning.mockResolvedValue([updatedUser]);
@@ -123,7 +123,7 @@ describe("user.service – updateUser", () => {
 describe("user.service – updateUserRule", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("updates user role to admin and returns updated user", async () => {
+  test("updates user role to admin and returns updated user", async () => {
     const adminUser = { ...MOCK_USER, rule: "admin" };
     mockReturning.mockResolvedValue([adminUser]);
 
@@ -132,7 +132,7 @@ describe("user.service – updateUserRule", () => {
     expect(result).toEqual(adminUser);
   });
 
-  it("updates user role to user and returns updated user", async () => {
+  test("updates user role to user and returns updated user", async () => {
     const regularUser = { ...MOCK_USER, rule: "user" };
     mockReturning.mockResolvedValue([regularUser]);
 

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 
 // ── mock user service ─────────────────────────────────────────────────────────
 const mockGetUser = vi.fn();
@@ -39,7 +39,7 @@ const MOCK_USER = {
 describe("user action – getUserAction", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns user based on token email", async () => {
+  test("returns user based on token email", async () => {
     mockGetUserFromToken.mockResolvedValue({ email: MOCK_USER.email });
     mockGetUser.mockResolvedValue({ ...MOCK_USER, password: "hashed" });
 
@@ -54,7 +54,7 @@ describe("user action – getUserAction", () => {
 describe("user action – updateUserAction", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("updates user with data from the request and current user id", async () => {
+  test("updates user with data from the request and current user id", async () => {
     mockGetUserFromToken.mockResolvedValue({ id: MOCK_USER.id });
     mockUpdateUser.mockResolvedValue(MOCK_USER);
 
@@ -78,7 +78,7 @@ describe("user action – updateUserAction", () => {
 describe("user action – updateUserRuleAction", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("updates role to admin and returns updated user", async () => {
+  test("updates role to admin and returns updated user", async () => {
     const adminUser = { ...MOCK_USER, rule: "admin" };
     mockUpdateUserRule.mockResolvedValue(adminUser);
 
@@ -88,7 +88,7 @@ describe("user action – updateUserRuleAction", () => {
     expect(result).toEqual(adminUser);
   });
 
-  it("returns CustomError instance when id or rule is missing", async () => {
+  test("returns CustomError instance when id or rule is missing", async () => {
     const result = await updateUserRuleAction("", "admin");
 
     expect(result).toBeInstanceOf(CustomError);
@@ -99,7 +99,7 @@ describe("user action – updateUserRuleAction", () => {
 describe("user action – getAllUsersAction", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns all users", async () => {
+  test("returns all users", async () => {
     mockGetAllUsers.mockResolvedValue([MOCK_USER]);
 
     const result = await getAllUsersAction();
@@ -109,7 +109,7 @@ describe("user action – getAllUsersAction", () => {
     expect(result[0].email).toBe(MOCK_USER.email);
   });
 
-  it("returns empty array when no users exist", async () => {
+  test("returns empty array when no users exist", async () => {
     mockGetAllUsers.mockResolvedValue([]);
 
     const result = await getAllUsersAction();

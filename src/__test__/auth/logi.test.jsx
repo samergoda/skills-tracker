@@ -1,4 +1,3 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { signinUser, registerUser } from "@/lib/actions/auth";
 
 // ── mock next/headers ────────────────────────────────────────────────────────
@@ -9,7 +8,7 @@ vi.mock("next/headers", () => ({
       set: mockCookieSet,
       delete: vi.fn(),
       get: vi.fn(),
-    })
+    }),
   ),
 }));
 
@@ -43,21 +42,17 @@ const VALID_SIGNUP = {
 describe("signinUser action", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns success:true and sets cookie when credentials are valid", async () => {
+  test("returns success:true and sets cookie when credentials are valid", async () => {
     login.mockResolvedValue({ token: MOCK_TOKEN });
 
     const result = await signinUser(VALID_LOGIN);
 
     expect(result).toEqual({ success: true });
     expect(login).toHaveBeenCalledWith(VALID_LOGIN);
-    expect(mockCookieSet).toHaveBeenCalledWith(
-      "test-cookie",
-      MOCK_TOKEN,
-      expect.objectContaining({ httpOnly: true, secure: true })
-    );
+    expect(mockCookieSet).toHaveBeenCalledWith("test-cookie", MOCK_TOKEN, expect.objectContaining({ httpOnly: true, secure: true }));
   });
 
-  it("returns success:false with error when login service throws CustomError", async () => {
+  test("returns success:false with error when login service throws CustomError", async () => {
     const { CustomError } = await import("@/lib/util/customError");
     login.mockRejectedValue(new CustomError("INVALID_CREDENTIALS"));
 
@@ -66,7 +61,7 @@ describe("signinUser action", () => {
     expect(result).toEqual({ success: false, error: "Invalid email or password" });
   });
 
-  it("returns success:false with generic error on unexpected failure", async () => {
+  test("returns success:false with generic error on unexpected failure", async () => {
     login.mockRejectedValue(new Error("DB connection failed"));
 
     const result = await signinUser(VALID_LOGIN);
@@ -74,7 +69,7 @@ describe("signinUser action", () => {
     expect(result).toEqual({ success: false, error: "Unexpected error" });
   });
 
-  it("returns success:false when form data is invalid (schema fails)", async () => {
+  test("returns success:false when form data is invalid (schema fails)", async () => {
     const result = await signinUser({ email: "bad-email", password: "123" });
 
     expect(result).toEqual({ success: false, error: "Invalid form data" });
@@ -85,21 +80,17 @@ describe("signinUser action", () => {
 describe("registerUser action", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns success:true and sets cookie when signup succeeds", async () => {
+  test("returns success:true and sets cookie when signup succeeds", async () => {
     signup.mockResolvedValue({ token: MOCK_TOKEN });
 
     const result = await registerUser(VALID_SIGNUP);
 
     expect(result).toEqual({ success: true });
     expect(signup).toHaveBeenCalledWith(VALID_SIGNUP);
-    expect(mockCookieSet).toHaveBeenCalledWith(
-      "test-cookie",
-      MOCK_TOKEN,
-      expect.objectContaining({ httpOnly: true, secure: true })
-    );
+    expect(mockCookieSet).toHaveBeenCalledWith("test-cookie", MOCK_TOKEN, expect.objectContaining({ httpOnly: true, secure: true }));
   });
 
-  it("returns success:false with error when signup service throws CustomError", async () => {
+  test("returns success:false with error when signup service throws CustomError", async () => {
     const { CustomError } = await import("@/lib/util/customError");
     signup.mockRejectedValue(new CustomError("DUPLICATE_EMAIL"));
 
@@ -108,7 +99,7 @@ describe("registerUser action", () => {
     expect(result).toEqual({ success: false, error: "Invalid email or password" });
   });
 
-  it("returns success:false with generic error on unexpected failure", async () => {
+  test("returns success:false with generic error on unexpected failure", async () => {
     signup.mockRejectedValue(new Error("Network error"));
 
     const result = await registerUser(VALID_SIGNUP);
@@ -116,9 +107,7 @@ describe("registerUser action", () => {
     expect(result).toEqual({ success: false, error: "Unexpected error" });
   });
 
-  it("throws ZodError when required signup fields are missing", async () => {
-    await expect(
-      registerUser({ email: "test@test.com", password: "pass123", firstName: "", lastName: "" })
-    ).rejects.toThrow();
+  test("throws ZodError when required signup fields are missing", async () => {
+    await expect(registerUser({ email: "test@test.com", password: "pass123", firstName: "", lastName: "" })).rejects.toThrow();
   });
 });

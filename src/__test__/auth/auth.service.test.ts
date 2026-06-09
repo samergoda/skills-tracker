@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, type MockInstance } from "vitest";
+import { describe, expect, vi, beforeEach, type MockInstance, test } from "vitest";
 
 // ── mock db ───────────────────────────────────────────────────────────────────
 const mockFindFirst = vi.fn();
@@ -60,7 +60,7 @@ const MOCK_TOKEN = "mock.jwt.token";
 describe("auth.service – login", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns user and token when credentials are valid", async () => {
+  test("returns user and token when credentials are valid", async () => {
     mockFindFirst.mockResolvedValue(MOCK_USER);
     comparePWMock.mockResolvedValue(true);
     createTokenMock.mockReturnValue(MOCK_TOKEN);
@@ -73,7 +73,7 @@ describe("auth.service – login", () => {
     expect(comparePW).toHaveBeenCalledWith("password123", MOCK_USER.password);
   });
 
-  it("throws CustomError when password is incorrect", async () => {
+  test("throws CustomError when password is incorrect", async () => {
     mockFindFirst.mockResolvedValue(MOCK_USER);
     comparePWMock.mockResolvedValue(false);
 
@@ -84,7 +84,7 @@ describe("auth.service – login", () => {
 describe("auth.service – signup", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("inserts user, creates session, and returns token", async () => {
+  test("inserts user, creates session, and returns token", async () => {
     const newUser = { ...MOCK_USER, id: "new-user-1" };
     hashPWMock.mockResolvedValue("hashed-new-pw");
     mockReturning.mockResolvedValue([newUser]);

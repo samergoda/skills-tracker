@@ -1,6 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-
-// ── mock server-only ──────────────────────────────────────────────────────────
+import { describe, expect, vi, beforeEach, test } from "vitest";
 
 // ── mock next/headers ────────────────────────────────────────────────────────
 const mockCookieDelete = vi.fn();
@@ -10,7 +8,7 @@ vi.mock("next/headers", () => ({
       delete: mockCookieDelete,
       set: vi.fn(),
       get: vi.fn(),
-    })
+    }),
   ),
 }));
 
@@ -25,7 +23,7 @@ import { signout } from "@/lib/actions/signout";
 describe("signout action", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("deletes the auth cookie and redirects to /login", async () => {
+  test("deletes the auth cookie and redirects to /login", async () => {
     // redirect throws in Next.js (NEXT_REDIRECT), simulate the same
     mockRedirect.mockImplementation(() => {
       throw new Error("NEXT_REDIRECT");
